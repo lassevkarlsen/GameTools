@@ -39,9 +39,9 @@
 
 @if (_upgrades.Count > 0)
 {
-    <RadzenDataGrid Data="@_upgrades">
+    <RadzenDataGrid Data="@_upgrades" Style="margin-top: 1rem">
         <Columns>
-            <RadzenDataGridColumn Title="Gem Forge" Property="GemForge" />
+            <RadzenDataGridColumn Width="20rem" Title="Gem Forge" Property="GemForge" />
             <RadzenDataGridColumn Title="Archaic Essence level" Property="ArchaicEssenceLevel" />
             <RadzenDataGridColumn Title="Total cost" Property="TotalCost" />
             <RadzenDataGridColumn Title="From level" Property="FromLevel" />
