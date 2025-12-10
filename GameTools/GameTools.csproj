@@ -14,4 +14,10 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\LVK.Libraries\src\LVK.Bootstrapping\LVK.Bootstrapping.csproj" />
+      <ProjectReference Include="..\LVK.Libraries\src\LVK.Core\LVK.Core.csproj" />
+      <ProjectReference Include="..\LVK.Libraries\src\LVK.Hosting\LVK.Hosting.csproj" />
+    </ItemGroup>
+
 </Project>

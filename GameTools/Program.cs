@@ -1,24 +1,10 @@
-using GameTools.Components;
+using GameTools;
 
-var builder = WebApplication.CreateBuilder(args);
+using LVK.Bootstrapping;
 
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+builder.Bootstrap(new ApplicationBootstrapper());
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-}
-
-app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
-app.UseAntiforgery();
-
-app.MapStaticAssets();
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
-
-app.Run();
+WebApplication app = builder.Build();
+await app.InitializeAsync();
+await app.RunAsync();

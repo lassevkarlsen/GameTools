@@ -2,6 +2,14 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameTools", "GameTools\GameTools.csproj", "{F4473361-30DA-41B4-89B0-9AF181F86138}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LVK.Libraries", "LVK.Libraries", "{41C5A87B-773A-4D35-A798-B28B7F3C0D29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LVK.Core", "LVK.Libraries\src\LVK.Core\LVK.Core.csproj", "{01A0843C-0E4F-4B21-9E69-5DE8ED682039}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LVK.Bootstrapping", "LVK.Libraries\src\LVK.Bootstrapping\LVK.Bootstrapping.csproj", "{90F41194-A0B9-4796-B5DA-1F2091FF5FC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LVK.Hosting", "LVK.Libraries\src\LVK.Hosting\LVK.Hosting.csproj", "{B6F575CB-3F77-4F31-BFB4-4DD9627F7636}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +20,22 @@ Global
 		{F4473361-30DA-41B4-89B0-9AF181F86138}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4473361-30DA-41B4-89B0-9AF181F86138}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4473361-30DA-41B4-89B0-9AF181F86138}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01A0843C-0E4F-4B21-9E69-5DE8ED682039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01A0843C-0E4F-4B21-9E69-5DE8ED682039}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01A0843C-0E4F-4B21-9E69-5DE8ED682039}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01A0843C-0E4F-4B21-9E69-5DE8ED682039}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90F41194-A0B9-4796-B5DA-1F2091FF5FC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90F41194-A0B9-4796-B5DA-1F2091FF5FC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90F41194-A0B9-4796-B5DA-1F2091FF5FC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90F41194-A0B9-4796-B5DA-1F2091FF5FC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6F575CB-3F77-4F31-BFB4-4DD9627F7636}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6F575CB-3F77-4F31-BFB4-4DD9627F7636}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6F575CB-3F77-4F31-BFB4-4DD9627F7636}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6F575CB-3F77-4F31-BFB4-4DD9627F7636}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{01A0843C-0E4F-4B21-9E69-5DE8ED682039} = {41C5A87B-773A-4D35-A798-B28B7F3C0D29}
+		{90F41194-A0B9-4796-B5DA-1F2091FF5FC0} = {41C5A87B-773A-4D35-A798-B28B7F3C0D29}
+		{B6F575CB-3F77-4F31-BFB4-4DD9627F7636} = {41C5A87B-773A-4D35-A798-B28B7F3C0D29}
 	EndGlobalSection
 EndGlobal

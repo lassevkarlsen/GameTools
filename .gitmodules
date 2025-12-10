@@ -1,0 +1,3 @@
+[submodule "LVK.Libraries"]
+	path = LVK.Libraries
+	url = git@github.com:lassevk/LVK.Libraries.git
