@@ -1,0 +1,47 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: [ self-hosted, arxas ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test --no-build --configuration Release --verbosity normal
+
+      - name: Publish
+        run: dotnet publish GameTools.Web/GameTools.Web.csproj --configuration Release --output ./publish --no-build
+
+      - name: Stop Docker Compose services
+        working-directory: /mnt/secure1/GameTools
+        run: docker compose down
+
+      - name: Deploy application
+        run: |
+          rm -rf /mnt/secure1/GameTools/application/*
+          cp -r ./publish/* /mnt/secure1/GameTools/application
+
+      - name: Start Docker Compose services
+        working-directory: /mnt/secure1/GameTools
+        run: docker compose up -d --build
