@@ -8,8 +8,11 @@ main {
     flex: 1;
 }
 
-.sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+.header-bar {
+  display: flex;
+  align-items: center;   /* vertical centering */
+  padding-left: 12px;    /* space from left edge */
+  height: 48px;          /* whatever your header height is */
 }
 
 .top-row {

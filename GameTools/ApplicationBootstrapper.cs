@@ -1,5 +1,7 @@
 ﻿using LVK.Bootstrapping;
 
+using Radzen;
+
 namespace GameTools;
 
 public class ApplicationBootstrapper : IModuleBootstrapper
@@ -9,6 +11,8 @@ public class ApplicationBootstrapper : IModuleBootstrapper
         // Add services to the container.
         builder.Services.AddRazorComponents()
            .AddInteractiveServerComponents();
+
+        builder.Services.AddRadzenComponents();
 
         builder.Services.AddTransient<IHostInitializer<WebApplication>, ApplicationInitializer>();
     }

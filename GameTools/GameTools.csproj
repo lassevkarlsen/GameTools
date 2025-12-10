@@ -20,4 +20,8 @@
       <ProjectReference Include="..\LVK.Libraries\src\LVK.Hosting\LVK.Hosting.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Radzen.Blazor" Version="8.3.9" />
+    </ItemGroup>
+
 </Project>
