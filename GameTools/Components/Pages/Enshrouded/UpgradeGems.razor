@@ -1,6 +1,60 @@
 ﻿@page "/enshrouded/gems"
+
 <h3>Upgrade Gems</h3>
 
-@code {
+<RadzenRow>
+    <RadzenLabel Text="Current gem level" Component="eCurrentGemLevel" />
+    <RadzenNumeric Name="eCurrentGemLevel" @bind-Value="@_currentGemLevel" Min="1" Max="49" Step="1" Change="(int i) => OnChanged()" />
+</RadzenRow>
 
+<RadzenRow style="margin-top: 1rem">
+    <RadzenCheckBox Name="chkUseSpringlandsNightSanctum" @bind-Value="@_useSpringlandsNightSanctum" Change="(bool _) => OnChanged()" />
+    <RadzenLabel Text="Use Springlands Night Sanctum" Component="chkUseSpringlandsNightSanctum" />
+</RadzenRow>
+
+<RadzenRow style="margin-top: 1rem">
+    <RadzenCheckBox Name="chkUseRevelwoodNightSanctum" @bind-Value="@_useRevelwoodNightSanctum" Change="(bool _) => OnChanged()" />
+    <RadzenLabel Text="Use Revelwood Night Sanctum" Component="chkUseRevelwoodNightSanctum" />
+</RadzenRow>
+
+<RadzenRow style="margin-top: 1rem">
+    <RadzenCheckBox Name="chkUseNomadHighlandsNightSanctum" @bind-Value="@_useNomadHighlandsNightSanctum" Change="(bool _) => OnChanged()" />
+    <RadzenLabel Text="Use Nomad Highlands Night Sanctum" Component="chkUseNomadHighlandsNightSanctum" />
+</RadzenRow>
+
+<RadzenRow style="margin-top: 1rem">
+    <RadzenCheckBox Name="chkUseKindlewastesNightSanctum" @bind-Value="@_useKindlewastesNightSanctum" Change="(bool _) => OnChanged()" />
+    <RadzenLabel Text="Use Kindlewastes Night Sanctum" Component="chkUseKindlewastesNightSanctum" />
+</RadzenRow>
+
+<RadzenRow style="margin-top: 1rem">
+    <RadzenCheckBox Name="chkUseAlbaneveSummitsNightSanctum" @bind-Value="@_useAlbaneveSummitsNightSanctum" Change="(bool _) => OnChanged()" />
+    <RadzenLabel Text="Use Albaneve Summits Night Sanctum" Component="chkUseAlbaneveSummitsNightSanctum" />
+</RadzenRow>
+
+<RadzenRow style="margin-top: 1rem">
+    <RadzenCheckBox Name="chkUseVeilwaterBasinNightSanctum" @bind-Value="@_useVeilwaterBasinNightSanctum" Change="(bool _) => OnChanged()" />
+    <RadzenLabel Text="Use Veilwater Basin Night Sanctum" Component="chkUseVeilwaterBasinNightSanctum" />
+</RadzenRow>
+
+@if (_upgrades.Count > 0)
+{
+    <RadzenDataGrid Data="@_upgrades">
+        <Columns>
+            <RadzenDataGridColumn Title="Gem Forge" Property="GemForge" />
+            <RadzenDataGridColumn Title="Archaic Essence level" Property="ArchaicEssenceLevel" />
+            <RadzenDataGridColumn Title="Total cost" Property="TotalCost" />
+            <RadzenDataGridColumn Title="From level" Property="FromLevel" />
+            <RadzenDataGridColumn Title="To level" Property="ToLevel" />
+        </Columns>
+    </RadzenDataGrid>
+    @* @foreach (Upgrade upgrade in _upgrades) *@
+    @* { *@
+    @*     <RadzenRow> *@
+    @*         @{ *@
+    @*             string text = $"At the {upgrade.GemForge}, spend {upgrade.TotalCost} of Archaic Essence level {upgrade.ArchaicEssenceLevel} to upgrade gem from level {upgrade.FromLevel} to {upgrade.ToLevel}."; *@
+    @*         } *@
+    @*         <RadzenText Text=@text/> *@
+    @*     </RadzenRow> *@
+    @* } *@
 }
