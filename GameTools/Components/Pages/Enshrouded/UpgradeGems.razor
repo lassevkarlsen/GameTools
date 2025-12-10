@@ -39,22 +39,42 @@
 
 @if (_upgrades.Count > 0)
 {
-    <RadzenDataGrid Data="@_upgrades" Style="margin-top: 1rem">
-        <Columns>
-            <RadzenDataGridColumn Width="20rem" Title="Gem Forge" Property="GemForge" />
-            <RadzenDataGridColumn Title="Archaic Essence level" Property="ArchaicEssenceLevel" />
-            <RadzenDataGridColumn Title="Total cost" Property="TotalCost" />
-            <RadzenDataGridColumn Title="From level" Property="FromLevel" />
-            <RadzenDataGridColumn Title="To level" Property="ToLevel" />
-        </Columns>
-    </RadzenDataGrid>
-    @* @foreach (Upgrade upgrade in _upgrades) *@
-    @* { *@
-    @*     <RadzenRow> *@
-    @*         @{ *@
-    @*             string text = $"At the {upgrade.GemForge}, spend {upgrade.TotalCost} of Archaic Essence level {upgrade.ArchaicEssenceLevel} to upgrade gem from level {upgrade.FromLevel} to {upgrade.ToLevel}."; *@
-    @*         } *@
-    @*         <RadzenText Text=@text/> *@
-    @*     </RadzenRow> *@
-    @* } *@
+    <RadzenTabs>
+        <Tabs>
+            <RadzenTabsItem Text="Table">
+                <RadzenDataGrid Data="@_upgrades" Style="margin-top: 1rem">
+                    <Columns>
+                        <RadzenDataGridColumn Width="20rem" Title="Gem Forge" Property="GemForge"/>
+                        <RadzenDataGridColumn Title="Archaic Essence level" Property="ArchaicEssenceLevel"/>
+                        <RadzenDataGridColumn Title="Total cost" Property="TotalCost"/>
+                        <RadzenDataGridColumn Title="From level" Property="FromLevel"/>
+                        <RadzenDataGridColumn Title="To level" Property="ToLevel"/>
+                    </Columns>
+                </RadzenDataGrid>
+            </RadzenTabsItem>
+
+            <RadzenTabsItem Text="Timeline">
+                <RadzenTimeline LinePosition="LinePosition.Alternate">
+                    <Items>
+                        @foreach (Upgrade upgrade in _upgrades)
+                        {
+                            <RadzenTimelineItem PointStyle="PointStyle.Primary">
+                                <LabelContent>@upgrade.FromLevel</LabelContent>
+                            </RadzenTimelineItem>
+
+                            <RadzenTimelineItem>
+                                <LabelContent>
+                                    Spend @upgrade.TotalCost Archaic Essence level @upgrade.ArchaicEssenceLevel<br/>
+                                    at @upgrade.GemForge
+                                </LabelContent>
+                            </RadzenTimelineItem>
+                        }
+                        <RadzenTimelineItem PointStyle="PointStyle.Primary">
+                            <LabelContent>50</LabelContent>
+                        </RadzenTimelineItem>
+                    </Items>
+                </RadzenTimeline>
+            </RadzenTabsItem>
+        </Tabs>
+    </RadzenTabs>
 }
