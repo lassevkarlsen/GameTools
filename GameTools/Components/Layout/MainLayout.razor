@@ -3,7 +3,8 @@
 <RadzenComponents @rendermode="InteractiveServer" />
 <RadzenLayout>
     <RadzenHeader Orientation="LayoutOrientation.Horizontal" AlignItems="AlignItems.Center" Style="@(_branch == "develop" ? "background-color: #23b220;" : "")">
-        <div class="header-bar">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+            <RadzenSidebarToggle Click="@(() => _sidebarExpanded = !_sidebarExpanded)"/>
             @if (_branch == "develop")
             {
                 <RadzenLabel Text="Game Tools (development)"/>
@@ -12,13 +13,13 @@
             {
                 <RadzenLabel Text="Game Tools"/>
             }
-        </div>
+        </RadzenStack>
     </RadzenHeader>
-    <RadzenSidebar>
+    <RadzenSidebar @bind-Expanded="@_sidebarExpanded">
         <RadzenPanelMenu>
-            <RadzenPanelMenuItem Text="Home" Icon="home" />
+            <RadzenPanelMenuItem Text="Home" Icon="home"/>
             <RadzenPanelMenuItem Text="Enshrouded" Icon="shield">
-                <RadzenPanelMenuItem Text="Upgrade Gems" Path="/enshrouded/gems" />
+                <RadzenPanelMenuItem Text="Upgrade Gems" Path="/enshrouded/gems"/>
             </RadzenPanelMenuItem>
         </RadzenPanelMenu>
     </RadzenSidebar>
@@ -27,12 +28,12 @@
             @Body
         </div>
     </RadzenBody>
-    @if (_version != null)
-    {
-        <RadzenFooter>
-            version <a target="_blank" href="https://github.com/lassevkarlsen/GameTools/commit/@_version">@_version</a>.
-        </RadzenFooter>
-    }
+    <RadzenFooter Style="background-color: #dddddd; color: black;">
+        @if (_version != null)
+        {
+            <div>version <a target="_blank" href="https://github.com/lassevkarlsen/GameTools/commit/@_version">@_version</a>.</div>
+        }
+    </RadzenFooter>
 </RadzenLayout>
 
 <div id="blazor-error-ui" data-nosnippet>

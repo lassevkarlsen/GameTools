@@ -2,6 +2,8 @@
 
 public partial class MainLayout
 {
+    private bool _sidebarExpanded = true;
+
     private string? _version;
     private string? _branch;
 
