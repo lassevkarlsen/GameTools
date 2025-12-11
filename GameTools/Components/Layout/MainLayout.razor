@@ -2,9 +2,16 @@
 
 <RadzenComponents @rendermode="InteractiveServer" />
 <RadzenLayout>
-    <RadzenHeader Orientation="LayoutOrientation.Horizontal" AlignItems="AlignItems.Center">
+    <RadzenHeader Orientation="LayoutOrientation.Horizontal" AlignItems="AlignItems.Center" Style="@(_branch == "develop" ? "background-color: #23b220;" : "")">
         <div class="header-bar">
-            <RadzenLabel Text="Game Tools"/>
+            @if (_branch == "develop")
+            {
+                <RadzenLabel Text="Game Tools (development)"/>
+            }
+            else
+            {
+                <RadzenLabel Text="Game Tools"/>
+            }
         </div>
     </RadzenHeader>
     <RadzenSidebar>

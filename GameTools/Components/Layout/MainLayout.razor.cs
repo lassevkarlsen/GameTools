@@ -3,13 +3,21 @@
 public partial class MainLayout
 {
     private string? _version;
+    private string? _branch;
 
     protected override void OnInitialized()
     {
         string idFileName = "git_id.txt";
         if (File.Exists(idFileName))
         {
-            _version = File.ReadAllText(idFileName);
+            using var reader = new StreamReader(idFileName);
+            _version = reader.ReadLine();
+            _branch = reader.ReadLine();
+        }
+        else
+        {
+            _version = "unknown";
+            _branch = "develop";
         }
 
         base.OnInitialized();
