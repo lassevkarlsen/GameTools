@@ -15,12 +15,17 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\GameTools.Database\GameTools.Database.csproj" />
       <ProjectReference Include="..\LVK.Libraries\src\LVK.Bootstrapping\LVK.Bootstrapping.csproj" />
       <ProjectReference Include="..\LVK.Libraries\src\LVK.Core\LVK.Core.csproj" />
       <ProjectReference Include="..\LVK.Libraries\src\LVK.Hosting\LVK.Hosting.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="Radzen.Blazor" Version="8.3.9" />
     </ItemGroup>
 

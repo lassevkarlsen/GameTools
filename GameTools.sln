@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LVK.Bootstrapping", "LVK.Li
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LVK.Hosting", "LVK.Libraries\src\LVK.Hosting\LVK.Hosting.csproj", "{B6F575CB-3F77-4F31-BFB4-4DD9627F7636}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameTools.Database", "GameTools.Database\GameTools.Database.csproj", "{EC41FF4F-7959-4910-809F-E9AE33C6890B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{B6F575CB-3F77-4F31-BFB4-4DD9627F7636}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6F575CB-3F77-4F31-BFB4-4DD9627F7636}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6F575CB-3F77-4F31-BFB4-4DD9627F7636}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC41FF4F-7959-4910-809F-E9AE33C6890B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC41FF4F-7959-4910-809F-E9AE33C6890B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC41FF4F-7959-4910-809F-E9AE33C6890B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC41FF4F-7959-4910-809F-E9AE33C6890B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{01A0843C-0E4F-4B21-9E69-5DE8ED682039} = {41C5A87B-773A-4D35-A798-B28B7F3C0D29}
