@@ -52,7 +52,7 @@ jobs:
       - name: Write git id to file
         run: |
           echo "${GITHUB_SHA}" > /mnt/secure1/GameTools/application/git_id.txt
-          echo "{{ steps.extract_branch.outputs.branch }}" >> /mnt/secure1/GameTools/application/git_id.txt
+          echo "${{ steps.extract_branch.outputs.branch }}" >> /mnt/secure1/GameTools/application/git_id.txt
 
 
       - name: Start Docker Compose services
