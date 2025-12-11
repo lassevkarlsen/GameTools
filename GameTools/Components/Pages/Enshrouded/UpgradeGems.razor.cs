@@ -1,4 +1,4 @@
-﻿using Radzen.Blazor;
+﻿using Microsoft.AspNetCore.Components;
 
 namespace GameTools.Components.Pages.Enshrouded;
 
@@ -12,12 +12,17 @@ public partial class UpgradeGems
     private bool _useAlbaneveSummitsNightSanctum = false;
     private bool _useVeilwaterBasinNightSanctum = false;
 
+    [CascadingParameter]
+    public Action<string>? SetPageTitle { get; set; }
+
     private List<Upgrade> _upgrades = [];
 
     protected override async Task OnInitializedAsync()
     {
         await OnChanged();
         await base.OnInitializedAsync();
+
+        SetPageTitle?.Invoke("Enshrouded :: Upgrade Gems");
     }
 
     private Task OnChanged()

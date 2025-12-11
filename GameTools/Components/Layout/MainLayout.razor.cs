@@ -1,4 +1,6 @@
-﻿namespace GameTools.Components.Layout;
+﻿using Microsoft.AspNetCore.Mvc.TagHelpers;
+
+namespace GameTools.Components.Layout;
 
 public partial class MainLayout
 {
@@ -6,6 +8,8 @@ public partial class MainLayout
 
     private string? _version;
     private string? _branch;
+
+    private string _pageTitle = "Home";
 
     protected override void OnInitialized()
     {
@@ -23,5 +27,11 @@ public partial class MainLayout
         }
 
         base.OnInitialized();
+    }
+
+    private void SetPageTitle(string title)
+    {
+        _pageTitle = title;
+        StateHasChanged();
     }
 }

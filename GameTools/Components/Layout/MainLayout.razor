@@ -7,17 +7,17 @@
             <RadzenSidebarToggle Click="@(() => _sidebarExpanded = !_sidebarExpanded)"/>
             @if (_branch == "develop")
             {
-                <RadzenLabel Text="Game Tools (development)"/>
+                <div><RadzenLabel Text="Game Tools (development)"/> :: <RadzenLabel Text="@_pageTitle"/></div>
             }
             else
             {
-                <RadzenLabel Text="Game Tools"/>
+                <div><RadzenLabel Text="Game Tools"/> :: <RadzenLabel Text="@_pageTitle"/></div>
             }
         </RadzenStack>
     </RadzenHeader>
     <RadzenSidebar @bind-Expanded="@_sidebarExpanded">
         <RadzenPanelMenu>
-            <RadzenPanelMenuItem Text="Home" Icon="home"/>
+            <RadzenPanelMenuItem Text="Home" Icon="home" Path="/" />
             <RadzenPanelMenuItem Text="Enshrouded" Icon="shield">
                 <RadzenPanelMenuItem Text="Upgrade Gems" Path="/enshrouded/gems"/>
             </RadzenPanelMenuItem>
@@ -25,7 +25,9 @@
     </RadzenSidebar>
     <RadzenBody>
         <div class="rz-p-4">
-            @Body
+            <CascadingValue Value="(Action<string>)SetPageTitle">
+                @Body
+            </CascadingValue>
         </div>
     </RadzenBody>
     <RadzenFooter Style="background-color: #dddddd; color: black;">
