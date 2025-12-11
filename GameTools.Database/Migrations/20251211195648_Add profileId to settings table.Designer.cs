@@ -3,6 +3,7 @@ using System;
 using GameTools.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GameTools.Database.Migrations
 {
     [DbContext(typeof(GameToolsDbContext))]
-    partial class GameToolsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251211195648_Add profileId to settings table")]
+    partial class AddprofileIdtosettingstable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

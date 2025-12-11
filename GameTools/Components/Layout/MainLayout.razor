@@ -2,17 +2,29 @@
 
 <RadzenComponents @rendermode="InteractiveServer" />
 <RadzenLayout>
-    <RadzenHeader Orientation="LayoutOrientation.Horizontal" AlignItems="AlignItems.Center" Style="@(_branch == "develop" ? "background-color: #23b220;" : "")">
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
-            <RadzenSidebarToggle Click="@(() => _sidebarExpanded = !_sidebarExpanded)"/>
-            @if (_branch == "develop")
+    @{
+        var headerStyle = $"background-item: {(_branch == "develop" ? "#23b220;" : "")}; width: 100%; padding: 0.5rem 1rem;";
+    }
+    <RadzenHeader Orientation="LayoutOrientation.Horizontal" Style="@headerStyle">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0" JustifyContent="JustifyContent.SpaceBetween">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="10px">
+                <RadzenSidebarToggle Click="@(() => _sidebarExpanded = !_sidebarExpanded)"/>
+                @if (_branch == "develop")
+                {
+                    <div><RadzenLabel Text="Game Tools (development)"/> :: <RadzenLabel Text="@_pageTitle"/></div>
+                }
+                else
+                {
+                    <div><RadzenLabel Text="Game Tools"/> :: <RadzenLabel Text="@_pageTitle"/></div>
+                }
+            </RadzenStack>
+            @if (_userId != null)
             {
-                <div><RadzenLabel Text="Game Tools (development)"/> :: <RadzenLabel Text="@_pageTitle"/></div>
+                <a href="@($"/{_userId}/config/")">
+                    <RadzenIcon Icon="settings"/>
+                </a>
             }
-            else
-            {
-                <div><RadzenLabel Text="Game Tools"/> :: <RadzenLabel Text="@_pageTitle"/></div>
-            }
+            @* <RadzenButton Icon="settings" ButtonStyle="ButtonStyle.Light" Click="@(() => NavigationManager?.NavigateTo("/config"))"/> *@
         </RadzenStack>
     </RadzenHeader>
     <RadzenSidebar @bind-Expanded="@_sidebarExpanded">

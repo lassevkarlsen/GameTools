@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc.TagHelpers;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 
 namespace GameTools.Components.Layout;
 
 public partial class MainLayout
 {
+    [Inject]
+    public NavigationManager? NavigationManager { get; set; }
+
     private bool _sidebarExpanded = true;
 
     private string? _version;

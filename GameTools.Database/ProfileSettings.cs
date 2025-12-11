@@ -9,6 +9,8 @@ public class ProfileSettings
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
+    public Guid ProfileId { get; set; }
+
     [MaxLength(64)]
     public string? PushoverUserKey { get; set; }
 }
