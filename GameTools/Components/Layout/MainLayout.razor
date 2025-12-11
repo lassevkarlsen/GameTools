@@ -30,10 +30,10 @@
             </CascadingValue>
         </div>
     </RadzenBody>
-    <RadzenFooter Style="background-color: #dddddd; color: black;">
+    <RadzenFooter class="footer">
         @if (_version != null)
         {
-            <div>version <a target="_blank" href="https://github.com/lassevkarlsen/GameTools/commit/@_version">@_version</a>.</div>
+            <a target="_blank" href="https://github.com/lassevkarlsen/GameTools/commit/@_version">@_branch/@_version[0..8]</a>
         }
     </RadzenFooter>
 </RadzenLayout>

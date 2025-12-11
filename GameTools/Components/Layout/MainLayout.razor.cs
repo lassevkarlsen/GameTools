@@ -22,7 +22,7 @@ public partial class MainLayout
         }
         else
         {
-            _version = "unknown";
+            _version = "0000000000000000";
             _branch = "develop";
         }
 
