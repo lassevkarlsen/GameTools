@@ -10,6 +10,7 @@ public partial class MainLayout
     private string? _branch;
 
     private string _pageTitle = "Home";
+    private Guid? _userId;
 
     protected override void OnInitialized()
     {
@@ -32,6 +33,12 @@ public partial class MainLayout
     private void SetPageTitle(string title)
     {
         _pageTitle = title;
+        StateHasChanged();
+    }
+
+    private void SetUserId(Guid userId)
+    {
+        _userId = userId;
         StateHasChanged();
     }
 }

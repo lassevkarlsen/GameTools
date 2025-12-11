@@ -12,9 +12,6 @@ public partial class UpgradeGems
     private bool _useAlbaneveSummitsNightSanctum = false;
     private bool _useVeilwaterBasinNightSanctum = false;
 
-    [CascadingParameter]
-    public Action<string>? SetPageTitle { get; set; }
-
     private List<Upgrade> _upgrades = [];
 
     protected override async Task OnInitializedAsync()

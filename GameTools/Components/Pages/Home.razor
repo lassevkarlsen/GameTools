@@ -1,5 +1,19 @@
-﻿@page "/"
+﻿@inherits BasePage
+@page "/"
+@page "/{userIdString}/"
 
 <PageTitle>GameTools :: Home</PageTitle>
 
-Please use the navigation bar to reach the various tools.
+@if (IsAuthenticated) { }
+else {
+    <div>
+        <p>You need a user-session for this site.</p>
+        <p>This user-session can be bookmarked and shared to gain access to the same settings, for those pages that have persistent state.</p>
+        <p>Note that no personal information is gathered beyond normal network traffic, your name, email address, etc. is not collected, nor processed.</p>
+        <p>
+            <b>NOTE!</b> Since no personal information is gathered, if you lose access to your URL there will be no automatic reclaim function to gain access.
+            If you lose access to your URL, please <a href="mailto:lasse@vkarlsen.no">contact me</a> for help.
+        </p>
+        <RadzenButton Click="CreateSession" Text="Click here to create session" />
+    </div>
+}

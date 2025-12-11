@@ -17,16 +17,28 @@
     </RadzenHeader>
     <RadzenSidebar @bind-Expanded="@_sidebarExpanded">
         <RadzenPanelMenu>
-            <RadzenPanelMenuItem Text="Home" Icon="home" Path="/" />
-            <RadzenPanelMenuItem Text="Enshrouded" Icon="shield">
-                <RadzenPanelMenuItem Text="Upgrade Gems" Path="/enshrouded/gems"/>
-            </RadzenPanelMenuItem>
+            @if (_userId != null)
+            {
+                <RadzenPanelMenuItem Text="Home" Icon="home" Path="@($"/{_userId}/")"/>
+            }
+            else
+            {
+                <RadzenPanelMenuItem Text="Home" Icon="home" Path="/"/>
+            }
+            @if (_userId != null)
+            {
+                <RadzenPanelMenuItem Text="Enshrouded" Icon="shield">
+                    <RadzenPanelMenuItem Text="Upgrade Gems" Path="@($"/{_userId}/enshrouded/gems")"/>
+                </RadzenPanelMenuItem>
+            }
         </RadzenPanelMenu>
     </RadzenSidebar>
     <RadzenBody>
         <div class="rz-p-4">
             <CascadingValue Value="(Action<string>)SetPageTitle">
-                @Body
+                <CascadingValue Value="(Action<Guid>)SetUserId">
+                    @Body
+                </CascadingValue>
             </CascadingValue>
         </div>
     </RadzenBody>
