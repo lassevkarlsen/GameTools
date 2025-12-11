@@ -95,12 +95,12 @@ main {
 
 
 .footer {
-  background-color: #dddddd;
+  background-color: #dddddd !important;
 }
 
 .footer a,
 .footer a:visited,
 .footer a:hover,
 .footer a:active {
-  color: #bbbbbb !important;   /* slightly darker than #dddddd */
+  color: #aaaaaa !important;   /* slightly darker than #dddddd */
 }
