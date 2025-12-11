@@ -4,7 +4,16 @@
 
 <PageTitle>GameTools :: Home</PageTitle>
 
-@if (IsAuthenticated) { }
+@if (IsAuthenticated) {
+    <p>Your unique user-session URL is <a href="@($"/{UserId}/")">this url</a>.</p>
+    <p>Please bookmark this URL for future visits to the same persistent state.</p>
+    <p>Note that not all the tools here will have persistent state.</p>
+    <p>Note that no personal information is gathered beyond normal network traffic, your name, email address, etc. is not collected, nor processed.</p>
+    <p>
+        <b>NOTE!</b> Since no personal information is gathered, if you lose access to your URL there will be no automatic reclaim function to gain access.
+        If you lose access to your URL, please <a href="mailto:lasse@vkarlsen.no">contact me</a> for help.
+    </p>
+}
 else {
     <div>
         <p>You need a user-session for this site.</p>
