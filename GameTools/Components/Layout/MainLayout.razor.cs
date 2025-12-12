@@ -10,43 +10,30 @@ namespace GameTools.Components.Layout;
 
 public partial class MainLayout : IAsyncDisposable
 {
-    private NavigationManager? _navigationManager;
+    private readonly NavigationManager _navigationManager;
     private readonly IEventBus _eventBus;
     private readonly NotificationService _notificationService;
+    private readonly CookieThemeService _cookieThemeService;
 
     private bool _sidebarExpanded = true;
-
-    private string? _version;
-    private string? _branch;
 
     private string _pageTitle = "Home";
     private Guid? _profileId;
 
     private IDisposable? _subscription;
 
-    public MainLayout(NavigationManager navigationManager, IEventBus eventBus, NotificationService notificationService)
+    public MainLayout(NavigationManager navigationManager, IEventBus eventBus, NotificationService notificationService,
+            CookieThemeService cookieThemeService)
     {
         _navigationManager = navigationManager ?? throw new ArgumentNullException(nameof(navigationManager));
         _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
         _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+        _cookieThemeService = cookieThemeService ?? throw new ArgumentNullException(nameof(cookieThemeService));
     }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-
-        string idFileName = "git_id.txt";
-        if (File.Exists(idFileName))
-        {
-            using var reader = new StreamReader(idFileName);
-            _version = reader.ReadLine();
-            _branch = reader.ReadLine();
-        }
-        else
-        {
-            _version = "0000000000000000";
-            _branch = "develop";
-        }
 
         _subscription ??= _eventBus.Subscribe<TimerExpiredEvent>(OnTimerExpired);
     }
@@ -93,5 +80,11 @@ public partial class MainLayout : IAsyncDisposable
         {
             _subscription.Dispose();
         }
+    }
+
+    private Task NavigateToProfilePage()
+    {
+        _navigationManager.NavigateTo($"/{_profileId}/profile");
+        return Task.CompletedTask;
     }
 }

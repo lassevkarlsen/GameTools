@@ -2,29 +2,20 @@
 
 <RadzenComponents @rendermode="InteractiveServer" />
 <RadzenLayout>
-    @{
-        var headerStyle = $"background-item: {(_branch == "develop" ? "#23b220;" : "")}; width: 100%; padding: 0.5rem 1rem;";
-    }
-    <RadzenHeader Orientation="LayoutOrientation.Horizontal" Style="@headerStyle">
+    <RadzenHeader Orientation="LayoutOrientation.Horizontal">
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0" JustifyContent="JustifyContent.SpaceBetween">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="10px">
                 <RadzenSidebarToggle Click="@(() => _sidebarExpanded = !_sidebarExpanded)"/>
-                @if (_branch == "develop")
+                <div><RadzenLabel Text="Game Tools"/> :: <RadzenLabel Text="@_pageTitle"/></div>
+            </RadzenStack>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+                @if (_profileId != null)
                 {
-                    <div><RadzenLabel Text="Game Tools (development)"/> :: <RadzenLabel Text="@_pageTitle"/></div>
-                }
-                else
-                {
-                    <div><RadzenLabel Text="Game Tools"/> :: <RadzenLabel Text="@_pageTitle"/></div>
+                    <RadzenAppearanceToggle />
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" Variant="Variant.Flat" Click="NavigateToProfilePage" Icon="account_circle" />
+                    @* <RadzenIcon Icon="account_circle" Style="cursor: pointer;" @onclick="@(() => NavigateToProfilePage())" /> *@
                 }
             </RadzenStack>
-            @if (_profileId != null)
-            {
-                <a href="@($"/{_profileId}/profile/")">
-                    <RadzenIcon Icon="account_circle"/>
-                </a>
-            }
-            @* <RadzenButton Icon="settings" ButtonStyle="ButtonStyle.Light" Click="@(() => NavigationManager?.NavigateTo("/config"))"/> *@
         </RadzenStack>
     </RadzenHeader>
     <RadzenSidebar @bind-Expanded="@_sidebarExpanded">
@@ -57,12 +48,6 @@
             </CascadingValue>
         </div>
     </RadzenBody>
-    <RadzenFooter class="footer" Style="background-color: #dddddd;">
-        @if (_version != null)
-        {
-            <a target="_blank" href="https://github.com/lassevkarlsen/GameTools/commit/@_version">@_branch/@_version[0..8]</a>
-        }
-    </RadzenFooter>
 </RadzenLayout>
 
 <div id="blazor-error-ui" data-nosnippet>

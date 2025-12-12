@@ -30,3 +30,8 @@ else {
         <RadzenButton Click="CreateSession" Text="Click here to create session" />
     </div>
 }
+
+@if (_version != null)
+{
+    <a target="_blank" href="https://github.com/lassevkarlsen/GameTools/commit/@_version">@_branch/@_version[0..8]</a>
+}
