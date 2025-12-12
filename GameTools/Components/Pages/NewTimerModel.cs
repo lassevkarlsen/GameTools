@@ -15,10 +15,13 @@ public class NewTimerModel
     [MaxLength(100)]
     public string Input { get; set; } = "";
 
+    public string ErrorMessage { get; set; } = "";
+
     public bool TryParse(out TimeSpan duration, out string name)
     {
         duration = TimeSpan.Zero;
         name = "";
+        ErrorMessage = "";
 
         if (string.IsNullOrWhiteSpace(Input))
         {
@@ -62,14 +65,14 @@ public class NewTimerModel
 
             if (!wasMatched)
             {
-                // TODO: How to signal what was wrong back to the user?
+                ErrorMessage = $"Invalid duration specification: '{part}'";
                 return false;
             }
         }
 
         if (totalDuration == TimeSpan.Zero)
         {
-            // TODO: How to signal what was wrong back to the user?
+            ErrorMessage = "No duration specifications were provided";
             return false;
         }
 

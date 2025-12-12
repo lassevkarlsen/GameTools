@@ -7,6 +7,10 @@
     <DataAnnotationsValidator />
     <RadzenLabel Component="Input" Text="New timer"/>
     <RadzenTextBox Name="Input" Style="width: 20rem;" @bind-Value="@_newTimerModel.Input" Placeholder="Name: Duration"/>
+    @if (!string.IsNullOrWhiteSpace(_newTimerModel.ErrorMessage))
+    {
+        <RadzenAlert Severity="AlertSeverity.Error">@_newTimerModel.ErrorMessage</RadzenAlert>
+    }
 </EditForm>
 
 @if (_timers.Any())
