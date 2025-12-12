@@ -18,7 +18,7 @@ public class GameToolsDbContext : DbContext
             return;
         }
 
-        var newProfile = new Profile { Id = profileId, PushoverUserKey = "dummykey" };
+        var newProfile = new Profile { Id = profileId };
         Profiles.Add(newProfile);
         await SaveChangesAsync();
     }
