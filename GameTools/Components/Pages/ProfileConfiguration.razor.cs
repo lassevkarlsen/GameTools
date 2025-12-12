@@ -36,6 +36,10 @@ public partial class ProfileConfiguration
                 Name = profile.Name == Profile.DefaultProfileName ? "" : profile.Name, PushoverUserKey = profile.PushoverUserKey ?? "",
             };
         }
+        else
+        {
+            _model = new();
+        }
     }
 
     private async Task Save()
