@@ -20,8 +20,8 @@
             </RadzenStack>
             @if (_profileId != null)
             {
-                <a href="@($"/{_profileId}/config/")">
-                    <RadzenIcon Icon="settings"/>
+                <a href="@($"/{_profileId}/profile/")">
+                    <RadzenIcon Icon="account_circle"/>
                 </a>
             }
             @* <RadzenButton Icon="settings" ButtonStyle="ButtonStyle.Light" Click="@(() => NavigationManager?.NavigateTo("/config"))"/> *@
