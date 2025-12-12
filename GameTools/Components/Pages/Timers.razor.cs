@@ -44,6 +44,8 @@ public partial class Timers : IAsyncDisposable
 
         _ = PeriodicRefresh();
         _subscription ??= _eventBus.Subscribe<TimersEditedForProfileEvent>(OnTimersEditedForProfile);
+
+        SetPageTitle?.Invoke("General Tools :: Timers");
     }
 
     private async Task OnTimersEditedForProfile(TimersEditedForProfileEvent evt)
