@@ -1,4 +1,4 @@
-﻿using Radzen.Blazor;
+﻿using Microsoft.AspNetCore.Components;
 
 namespace GameTools.Components.Pages.Enshrouded;
 
@@ -18,6 +18,8 @@ public partial class UpgradeGems
     {
         await OnChanged();
         await base.OnInitializedAsync();
+
+        SetPageTitle?.Invoke("Enshrouded :: Upgrade Gems");
     }
 
     private Task OnChanged()

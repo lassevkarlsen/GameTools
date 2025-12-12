@@ -1,0 +1,27 @@
+﻿@inherits BasePage
+@page "/{profileIdString}/profile/"
+
+<PageTitle>GameTools :: Profile</PageTitle>
+
+@if (_model != null)
+{
+    <EditForm Model="@_model" OnValidSubmit="@Save">
+        <DataAnnotationsValidator/>
+        <RadzenRow AlignItems="AlignItems.Center">
+            <RadzenFormField Style="width: 40rem;" Text="Profile name">
+                <RadzenTextBox @bind-Value="@_model.Name"/>
+            </RadzenFormField>
+        </RadzenRow>
+        <RadzenRow AlignItems="AlignItems.Center">
+            <RadzenFormField Style="width: 40rem;" Text="Pushover user key">
+                <RadzenTextBox @bind-Value="@_model.PushoverUserKey"/>
+            </RadzenFormField>
+            <div>
+                <a href="https://pushover.net/" target="_blank"><RadzenIcon Icon="info" /></a>
+            </div>
+        </RadzenRow>
+        <RadzenRow Style="margin-top: 1rem;" AlignItems="AlignItems.Center">
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Save" />
+        </RadzenRow>
+    </EditForm>
+}

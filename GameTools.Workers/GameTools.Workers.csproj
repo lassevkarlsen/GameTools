@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\GameTools.Database\GameTools.Database.csproj" />
+      <ProjectReference Include="..\LVK.Libraries\src\LVK.Bootstrapping\LVK.Bootstrapping.csproj" />
+      <ProjectReference Include="..\LVK.Libraries\src\LVK.Events\LVK.Events.csproj" />
+      <ProjectReference Include="..\LVK.Libraries\src\LVK.Pushover\LVK.Pushover.csproj" />
+    </ItemGroup>
+
+</Project>

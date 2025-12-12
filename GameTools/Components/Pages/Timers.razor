@@ -1,0 +1,91 @@
+﻿@using GameTools.Database
+@using Humanizer
+@inherits BasePage
+@page "/{profileIdString}/timers"
+
+<EditForm Model="_newTimerModel" OnSubmit="@AddTimer">
+    <DataAnnotationsValidator />
+    <RadzenLabel Component="Input" Text="New timer"/>
+    <RadzenTextBox Name="Input" Style="width: 20rem;" @bind-Value="@_newTimerModel.Input" Placeholder="Name: Duration"/>
+</EditForm>
+
+@if (_timers.Any())
+{
+    <hr/>
+    @foreach (GameTimer timer in _timers)
+    {
+        double progress;
+        string caption;
+        ProgressBarStyle pbStyle = ProgressBarStyle.Primary;
+        if (timer.ElapsesAt != null)
+        {
+            TimeSpan timeLeft = timer.ElapsesAt!.Value - DateTimeOffset.UtcNow;
+            caption = timeLeft.Format();
+            progress = 1 - timeLeft.TotalMilliseconds / timer.Duration.TotalMilliseconds;
+            pbStyle = ProgressBarStyle.Success;
+        }
+        else if (timer.Remaining != null)
+        {
+            progress = 1 - timer.Remaining!.Value.TotalMilliseconds / timer.Duration.TotalMilliseconds;
+            caption = "Paused: " + timer.Remaining!.Value.Format();
+            pbStyle = ProgressBarStyle.Warning;
+        }
+        else
+        {
+            progress = timer.CompletionProcessed ? 1 : 0;
+            caption = timer.CompletionProcessed ? "Expired" : "Stopped";
+        }
+
+        <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Style="margin-bottom: 1rem;">
+            @if (timer.ElapsesAt == null || timer.ElapsesAt < DateTimeOffset.UtcNow)
+            {
+                if (timer.CompletionProcessed)
+                {
+                    <RadzenIcon Style="cursor: pointer;" Icon="replay" @onclick="@(() => StartOrResumeTimer(timer))"/>
+                }
+                else
+                {
+                    <RadzenIcon Style="cursor: pointer;" Icon="play_circle" @onclick="@(() => StartOrResumeTimer(timer))"/>
+                }
+            }
+            else
+            {
+                <RadzenIcon Icon="play_circle" IconColor="#aaaaaa"/>
+            }
+            @if (timer.ElapsesAt != null && timer.ElapsesAt >= DateTimeOffset.UtcNow)
+            {
+                <RadzenIcon Style="cursor: pointer;" Icon="pause" @onclick="@(() => PauseTimer(timer))"/>
+            }
+            else
+            {
+                <RadzenIcon Icon="pause" IconColor="#aaaaaa"/>
+            }
+
+            @if ((timer.ElapsesAt != null && timer.ElapsesAt >= DateTimeOffset.UtcNow) || timer.Remaining != null)
+            {
+                <RadzenIcon Style="cursor: pointer;" Icon="stop" @onclick="@(() => StopTimer(timer))"/>
+            }
+            else
+            {
+                <RadzenIcon Icon="stop" IconColor="#aaaaaa"/>
+            }
+            <RadzenIcon Style="cursor: pointer;" Icon="delete" @onclick="@(() => DeleteTimer(timer))"/>
+
+            <RadzenProgressBar ProgressBarStyle="@pbStyle" Style="width: 20rem; height: 1rem;" Value="@progress" Min="0" Max="1" ShowValue="true">
+                <Template>
+                    @caption
+                </Template>
+            </RadzenProgressBar> @(timer.Name) (@timer.Duration.Format())
+        </RadzenStack>
+    }
+
+    <hr/>
+    @if (_timers.Any(t => t.ElapsesAt != null && t.ElapsesAt >= DateTimeOffset.UtcNow))
+    {
+        <RadzenButton Text="Pause all timers" Click="@PauseAllTimers"/>
+    }
+    else
+    {
+        <RadzenButton Text="Pause all timers" Click="@PauseAllTimers" Disabled="true"/>
+    }
+}

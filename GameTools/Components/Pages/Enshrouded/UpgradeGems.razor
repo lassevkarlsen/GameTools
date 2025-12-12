@@ -1,42 +1,45 @@
-﻿@page "/enshrouded/gems"
+﻿@inherits BasePage
 
-<h3>Upgrade Gems</h3>
+@page "/{profileIdString}/enshrouded/gems"
 
-<RadzenRow>
+<PageTitle>GameTools :: Enshrouded :: Upgrade Gems</PageTitle>
+
+<RadzenRow AlignItems="AlignItems.Center">
     <RadzenLabel Text="Current gem level" Component="eCurrentGemLevel" />
     <RadzenNumeric Name="eCurrentGemLevel" @bind-Value="@_currentGemLevel" Min="1" Max="49" Step="1" Change="(int i) => OnChanged()" />
 </RadzenRow>
 
-<RadzenRow style="margin-top: 1rem">
-    <RadzenCheckBox Name="chkUseSpringlandsNightSanctum" @bind-Value="@_useSpringlandsNightSanctum" Change="(bool _) => OnChanged()" />
-    <RadzenLabel Text="Use Springlands Night Sanctum" Component="chkUseSpringlandsNightSanctum" />
-</RadzenRow>
+<RadzenStack Orientation="Orientation.Horizontal" Wrap="FlexWrap.Wrap" Style="margin-top: 1rem;">
+    <div>
+        <RadzenCheckBox Name="chkUseSpringlandsNightSanctum" @bind-Value="@_useSpringlandsNightSanctum" Change="(bool _) => OnChanged()"/>
+        <RadzenLabel Text="Use Springlands Night Sanctum" Component="chkUseSpringlandsNightSanctum"/>
+    </div>
 
-<RadzenRow style="margin-top: 1rem">
-    <RadzenCheckBox Name="chkUseRevelwoodNightSanctum" @bind-Value="@_useRevelwoodNightSanctum" Change="(bool _) => OnChanged()" />
-    <RadzenLabel Text="Use Revelwood Night Sanctum" Component="chkUseRevelwoodNightSanctum" />
-</RadzenRow>
+    <div>
+        <RadzenCheckBox Name="chkUseRevelwoodNightSanctum" @bind-Value="@_useRevelwoodNightSanctum" Change="(bool _) => OnChanged()"/>
+        <RadzenLabel Text="Use Revelwood Night Sanctum" Component="chkUseRevelwoodNightSanctum"/>
+    </div>
 
-<RadzenRow style="margin-top: 1rem">
-    <RadzenCheckBox Name="chkUseNomadHighlandsNightSanctum" @bind-Value="@_useNomadHighlandsNightSanctum" Change="(bool _) => OnChanged()" />
-    <RadzenLabel Text="Use Nomad Highlands Night Sanctum" Component="chkUseNomadHighlandsNightSanctum" />
-</RadzenRow>
+    <div>
+        <RadzenCheckBox Name="chkUseNomadHighlandsNightSanctum" @bind-Value="@_useNomadHighlandsNightSanctum" Change="(bool _) => OnChanged()"/>
+        <RadzenLabel Text="Use Nomad Highlands Night Sanctum" Component="chkUseNomadHighlandsNightSanctum"/>
+    </div>
 
-<RadzenRow style="margin-top: 1rem">
-    <RadzenCheckBox Name="chkUseKindlewastesNightSanctum" @bind-Value="@_useKindlewastesNightSanctum" Change="(bool _) => OnChanged()" />
-    <RadzenLabel Text="Use Kindlewastes Night Sanctum" Component="chkUseKindlewastesNightSanctum" />
-</RadzenRow>
+    <div>
+        <RadzenCheckBox Name="chkUseKindlewastesNightSanctum" @bind-Value="@_useKindlewastesNightSanctum" Change="(bool _) => OnChanged()"/>
+        <RadzenLabel Text="Use Kindlewastes Night Sanctum" Component="chkUseKindlewastesNightSanctum"/>
+    </div>
 
-<RadzenRow style="margin-top: 1rem">
-    <RadzenCheckBox Name="chkUseAlbaneveSummitsNightSanctum" @bind-Value="@_useAlbaneveSummitsNightSanctum" Change="(bool _) => OnChanged()" />
-    <RadzenLabel Text="Use Albaneve Summits Night Sanctum" Component="chkUseAlbaneveSummitsNightSanctum" />
-</RadzenRow>
+    <div>
+        <RadzenCheckBox Name="chkUseAlbaneveSummitsNightSanctum" @bind-Value="@_useAlbaneveSummitsNightSanctum" Change="(bool _) => OnChanged()"/>
+        <RadzenLabel Text="Use Albaneve Summits Night Sanctum" Component="chkUseAlbaneveSummitsNightSanctum"/>
+    </div>
 
-<RadzenRow style="margin-top: 1rem">
-    <RadzenCheckBox Name="chkUseVeilwaterBasinNightSanctum" @bind-Value="@_useVeilwaterBasinNightSanctum" Change="(bool _) => OnChanged()" />
-    <RadzenLabel Text="Use Veilwater Basin Night Sanctum" Component="chkUseVeilwaterBasinNightSanctum" />
-</RadzenRow>
-
+    <div>
+        <RadzenCheckBox Name="chkUseVeilwaterBasinNightSanctum" @bind-Value="@_useVeilwaterBasinNightSanctum" Change="(bool _) => OnChanged()"/>
+        <RadzenLabel Text="Use Veilwater Basin Night Sanctum" Component="chkUseVeilwaterBasinNightSanctum"/>
+    </div>
+</RadzenStack>
 @if (_upgrades.Count > 0)
 {
     <RadzenTabs>
@@ -45,10 +48,10 @@
                 <RadzenDataGrid Data="@_upgrades" Style="margin-top: 1rem">
                     <Columns>
                         <RadzenDataGridColumn Width="20rem" Title="Gem Forge" Property="GemForge"/>
-                        <RadzenDataGridColumn Title="Archaic Essence level" Property="ArchaicEssenceLevel"/>
-                        <RadzenDataGridColumn Title="Total cost" Property="TotalCost"/>
-                        <RadzenDataGridColumn Title="From level" Property="FromLevel"/>
-                        <RadzenDataGridColumn Title="To level" Property="ToLevel"/>
+                        <RadzenDataGridColumn Title="Archaic Essence level" Property="ArchaicEssenceLevel" TextAlign="TextAlign.Center"/>
+                        <RadzenDataGridColumn Title="Total cost" Property="TotalCost" TextAlign="TextAlign.Center"/>
+                        <RadzenDataGridColumn Title="From level" Property="FromLevel" TextAlign="TextAlign.Center"/>
+                        <RadzenDataGridColumn Title="To level" Property="ToLevel" TextAlign="TextAlign.Center"/>
                     </Columns>
                 </RadzenDataGrid>
             </RadzenTabsItem>

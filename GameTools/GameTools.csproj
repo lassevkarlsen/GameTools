@@ -5,23 +5,32 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>8cfb358f-0cc5-4413-8aaf-02a23dc10ad7</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
+      <ProjectReference Include="..\GameTools.Database\GameTools.Database.csproj" />
+      <ProjectReference Include="..\GameTools.Workers\GameTools.Workers.csproj" />
       <ProjectReference Include="..\LVK.Libraries\src\LVK.Bootstrapping\LVK.Bootstrapping.csproj" />
       <ProjectReference Include="..\LVK.Libraries\src\LVK.Core\LVK.Core.csproj" />
       <ProjectReference Include="..\LVK.Libraries\src\LVK.Hosting\LVK.Hosting.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Radzen.Blazor" Version="8.3.9" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Radzen.Blazor" Version="8.4.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Components\Pages\NewTimerModel.cs">
+        <DependentUpon>Timers.razor</DependentUpon>
+      </Compile>
+      <Compile Update="Components\Pages\ProfileConfigurationModel.cs">
+        <DependentUpon>ProfileConfiguration.razor</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>
