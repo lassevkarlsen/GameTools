@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GameTools.Database;
 
-public class GameTimer
+public class ShoppingListCategory
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -13,14 +13,6 @@ public class GameTimer
     public required Guid ProfileId { get; init; }
     public Profile? Profile { get; set; }
 
-    [Required]
-    public required TimeSpan Duration { get; set; }
-
-    [MaxLength(50)]
+    [MaxLength(100)]
     public required string Name { get; set; }
-
-    public DateTimeOffset? ElapsesAt { get; set; }
-    public TimeSpan? Remaining { get; set; }
-
-    public bool CompletionProcessed { get; set; }
 }
