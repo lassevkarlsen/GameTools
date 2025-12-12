@@ -3,6 +3,8 @@
 @inherits BasePage
 @page "/{profileIdString}/timers"
 
+<PageTitle>GameTools :: General Tools :: Timers</PageTitle>
+
 <EditForm Model="_newTimerModel" OnSubmit="@AddTimer">
     <DataAnnotationsValidator />
     <RadzenLabel Component="Input" Text="New timer"/>
