@@ -101,13 +101,20 @@ public class TimerNotificationsWorker : BackgroundService
             return;
         }
 
-        await _pushover.SendAsync(new PushoverNotification
+        try
         {
-            Message = $"GameTools - Timer '{timer.Name}' has expired, after running for {timer.Duration.Humanize(4)}",
-            Url = $"https://localhost:5140/{timer.ProfileId}/timers",
-            UrlTitle = "Open timer page",
-            Priority = PushoverNotificationPriority.Normal,
-            TargetUser = profile.PushoverUserKey,
-            Title = "GameTools timer expired", });
+            await _pushover.SendAsync(new PushoverNotification
+            {
+                Message = $"GameTools - Timer '{timer.Name}' has expired, after running for {timer.Duration.Humanize(4)}",
+                Url = $"https://localhost:5140/{timer.ProfileId}/timers",
+                UrlTitle = "Open timer page",
+                Priority = PushoverNotificationPriority.Normal,
+                TargetUser = profile.PushoverUserKey,
+                Title = "GameTools timer expired", });
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "Error sending pushover notification");
+        }
     }
 }
