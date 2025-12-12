@@ -3,13 +3,12 @@
 using LVK.Events;
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 
 using Radzen;
 
 namespace GameTools.Components.Layout;
 
-public partial class MainLayout
+public partial class MainLayout : IAsyncDisposable
 {
     private NavigationManager? _navigationManager;
     private readonly IEventBus _eventBus;
@@ -59,14 +58,16 @@ public partial class MainLayout
             return;
         }
 
-        _notificationService.Notify(new NotificationMessage
+        await InvokeAsync(() =>
         {
-            Severity = NotificationSeverity.Error,
-            Summary = "Timer expired",
-            Detail = $"Timer '{arg.Timer.Name}' expired",
-            Duration = 15_000,
-            ShowProgress = true,
-            Payload = Guid.NewGuid(),
+            _notificationService.Notify(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Summary = "Timer expired",
+                Detail = $"Timer '{arg.Timer.Name}' expired",
+                Duration = 15_000,
+                ShowProgress = true,
+                Payload = Guid.NewGuid(), });
         });
     }
 
@@ -80,5 +81,17 @@ public partial class MainLayout
     {
         _profileId = profileId;
         StateHasChanged();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_subscription is IAsyncDisposable subscriptionAsyncDisposable)
+        {
+            await subscriptionAsyncDisposable.DisposeAsync();
+        }
+        else if (_subscription != null)
+        {
+            _subscription.Dispose();
+        }
     }
 }

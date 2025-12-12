@@ -80,6 +80,11 @@ public class TimerNotificationsWorker : BackgroundService
             timers.Remove(first);
             first.ElapsesAt = null;
             await dbContext.SaveChangesAsync(CancellationToken.None);
+            await _eventBus.PublishAsync(new TimersEditedForProfileEvent
+            {
+                ProfileId = first.ProfileId,
+            }, CancellationToken.None);
+
             _logger.LogInformation("Timer #{FirstId}: {FirstName} expired", first.Id, first.Name);
         }
 

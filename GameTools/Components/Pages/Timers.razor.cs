@@ -11,27 +11,30 @@ using Radzen;
 
 namespace GameTools.Components.Pages;
 
-public partial class Timers
+public partial class Timers : IAsyncDisposable
 {
     private readonly IDbContextFactory<GameToolsDbContext> _dbContextFactory;
     private readonly IEventBus _eventBus;
     private readonly IHostApplicationLifetime _hostApplicationLifetime;
     private readonly DialogService _dialogService;
+    private readonly ILogger<Timers> _logger;
 
     private List<GameTimer> _timers = [];
 
     private readonly NewTimerModel _newTimerModel = new();
 
-    private readonly PeriodicTimer _refreshTimer = new(TimeSpan.FromSeconds(1));
     private bool _refreshingStarted;
 
+    private IDisposable? _subscription;
+
     public Timers(IDbContextFactory<GameToolsDbContext> dbContextFactory, IEventBus eventBus,
-            IHostApplicationLifetime hostApplicationLifetime, DialogService dialogService)
+            IHostApplicationLifetime hostApplicationLifetime, DialogService dialogService, ILogger<Timers> logger)
     {
         _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException(nameof(dbContextFactory));
         _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
         _hostApplicationLifetime = hostApplicationLifetime ?? throw new ArgumentNullException(nameof(hostApplicationLifetime));
         _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     protected override async Task OnInitializedAsync()
@@ -40,6 +43,20 @@ public partial class Timers
         await ReloadTimers();
 
         _ = PeriodicRefresh();
+        _subscription ??= _eventBus.Subscribe<TimersEditedForProfileEvent>(OnTimersEditedForProfile);
+    }
+
+    private async Task OnTimersEditedForProfile(TimersEditedForProfileEvent evt)
+    {
+        if (evt.ProfileId == ProfileId!.Value)
+        {
+            _logger.LogInformation("Timers edited for profile {ProfileId}", evt.ProfileId);
+            await InvokeAsync(async () =>
+            {
+                await ReloadTimers();
+                StateHasChanged();
+            });
+        }
     }
 
     private async Task PeriodicRefresh()
@@ -50,14 +67,13 @@ public partial class Timers
         }
 
         _refreshingStarted = true;
-        while (await _refreshTimer.WaitForNextTickAsync() && !_hostApplicationLifetime.ApplicationStopping.IsCancellationRequested)
+        while (!_hostApplicationLifetime.ApplicationStopping.IsCancellationRequested)
         {
-            if (!_timers.Any(t => t.ElapsesAt != null))
+            await Task.Delay(1000);
+            if (_timers.Any(t => t.ElapsesAt != null))
             {
-                continue;
+                StateHasChanged();
             }
-            await ReloadTimers();
-            StateHasChanged();
         }
     }
 
@@ -95,7 +111,10 @@ public partial class Timers
         });
         await dbContext.SaveChangesAsync();
         await _eventBus.PublishAsync(new TimersUpdatedEvent());
-        await ReloadTimers();
+        await _eventBus.PublishAsync(new TimersEditedForProfileEvent
+        {
+            ProfileId = ProfileId!.Value,
+        });
 
         _newTimerModel.Clear();
     }
@@ -120,7 +139,10 @@ public partial class Timers
 
             await dbContext.SaveChangesAsync();
             await _eventBus.PublishAsync(new TimersUpdatedEvent());
-            await ReloadTimers();
+            await _eventBus.PublishAsync(new TimersEditedForProfileEvent
+            {
+                ProfileId = ProfileId!.Value,
+            });
         }
     }
 
@@ -134,7 +156,10 @@ public partial class Timers
             foundTimer.ElapsesAt = null;
             await dbContext.SaveChangesAsync();
             await _eventBus.PublishAsync(new TimersUpdatedEvent());
-            await ReloadTimers();
+            await _eventBus.PublishAsync(new TimersEditedForProfileEvent
+            {
+                ProfileId = ProfileId!.Value,
+            });
         }
     }
 
@@ -149,7 +174,10 @@ public partial class Timers
             foundTimer.CompletionProcessed = false;
             await dbContext.SaveChangesAsync();
             await _eventBus.PublishAsync(new TimersUpdatedEvent());
-            await ReloadTimers();
+            await _eventBus.PublishAsync(new TimersEditedForProfileEvent
+            {
+                ProfileId = ProfileId!.Value,
+            });
         }
     }
 
@@ -170,7 +198,10 @@ public partial class Timers
                 dbContext.GameTimers.Remove(foundTimer);
                 await dbContext.SaveChangesAsync();
                 await _eventBus.PublishAsync(new TimersUpdatedEvent());
-                await ReloadTimers();
+                await _eventBus.PublishAsync(new TimersEditedForProfileEvent
+                {
+                    ProfileId = ProfileId!.Value,
+                });
             }
         }
     }
@@ -194,6 +225,22 @@ public partial class Timers
         }
 
         await dbContext.SaveChangesAsync();
-        await ReloadTimers();
+        await _eventBus.PublishAsync(new TimersUpdatedEvent());
+        await _eventBus.PublishAsync(new TimersEditedForProfileEvent
+        {
+            ProfileId = ProfileId!.Value,
+        });
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_subscription is IAsyncDisposable subscriptionAsyncDisposable)
+        {
+            await subscriptionAsyncDisposable.DisposeAsync();
+        }
+        else if (_subscription != null)
+        {
+            _subscription.Dispose();
+        }
     }
 }
