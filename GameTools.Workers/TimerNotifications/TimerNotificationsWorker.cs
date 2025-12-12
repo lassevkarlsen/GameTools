@@ -8,6 +8,7 @@ using LVK.Events;
 using LVK.Pushover;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -19,14 +20,20 @@ public class TimerNotificationsWorker : BackgroundService
     private readonly IEventBus _eventBus;
     private readonly ILogger<TimerNotificationsWorker> _logger;
     private readonly IPushover _pushover;
+    private readonly IConfiguration _configuration;
+    private readonly string _baseUrl;
 
     public TimerNotificationsWorker(IDbContextFactory<GameToolsDbContext> dbContextFactory, IEventBus eventBus,
-            ILogger<TimerNotificationsWorker> logger, IPushover pushover)
+            ILogger<TimerNotificationsWorker> logger, IPushover pushover,
+            IConfiguration configuration)
     {
         _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException(nameof(dbContextFactory));
         _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _pushover = pushover ?? throw new ArgumentNullException(nameof(pushover));
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+
+        _baseUrl = _configuration["App:BaseUrl"] ?? throw new InvalidOperationException("App:BaseUrl not set");
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -111,7 +118,7 @@ public class TimerNotificationsWorker : BackgroundService
             await _pushover.SendAsync(new PushoverNotification
             {
                 Message = $"GameTools - Timer '{timer.Name}' has expired, after running for {timer.Duration.Humanize(4)}",
-                Url = $"https://localhost:5140/{timer.ProfileId}/timers",
+                Url = $"{_baseUrl}{timer.ProfileId}/timers",
                 UrlTitle = "Open timer page",
                 Priority = PushoverNotificationPriority.Normal,
                 TargetUser = profile.PushoverUserKey,
