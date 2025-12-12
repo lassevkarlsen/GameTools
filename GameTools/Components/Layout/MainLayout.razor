@@ -18,9 +18,9 @@
                     <div><RadzenLabel Text="Game Tools"/> :: <RadzenLabel Text="@_pageTitle"/></div>
                 }
             </RadzenStack>
-            @if (_userId != null)
+            @if (_profileId != null)
             {
-                <a href="@($"/{_userId}/config/")">
+                <a href="@($"/{_profileId}/config/")">
                     <RadzenIcon Icon="settings"/>
                 </a>
             }
@@ -29,18 +29,21 @@
     </RadzenHeader>
     <RadzenSidebar @bind-Expanded="@_sidebarExpanded">
         <RadzenPanelMenu>
-            @if (_userId != null)
+            @if (_profileId != null)
             {
-                <RadzenPanelMenuItem Text="Home" Icon="home" Path="@($"/{_userId}/")"/>
+                <RadzenPanelMenuItem Text="Home" Icon="home" Path="@($"/{_profileId}/")"/>
             }
             else
             {
                 <RadzenPanelMenuItem Text="Home" Icon="home" Path="/"/>
             }
-            @if (_userId != null)
+            @if (_profileId != null)
             {
-                <RadzenPanelMenuItem Text="Enshrouded" Icon="shield">
-                    <RadzenPanelMenuItem Text="Upgrade Gems" Path="@($"/{_userId}/enshrouded/gems")"/>
+                <RadzenPanelMenuItem Text="General Tools" Icon="service_toolbox">
+                    <RadzenPanelMenuItem Text="Timers" Icon="timer" Path="@($"/{_profileId}/timers")"/>
+                </RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Text="Enshrouded" Icon="stadia_controller">
+                    <RadzenPanelMenuItem Text="Upgrade Gems" Icon="diamond" Path="@($"/{_profileId}/enshrouded/gems")"/>
                 </RadzenPanelMenuItem>
             }
         </RadzenPanelMenu>
@@ -48,7 +51,7 @@
     <RadzenBody>
         <div class="rz-p-4">
             <CascadingValue Value="(Action<string>)SetPageTitle">
-                <CascadingValue Value="(Action<Guid>)SetUserId">
+                <CascadingValue Value="(Action<Guid>)SetProfileId">
                     @Body
                 </CascadingValue>
             </CascadingValue>

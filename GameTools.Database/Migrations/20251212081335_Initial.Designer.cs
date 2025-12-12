@@ -3,6 +3,7 @@ using System;
 using GameTools.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GameTools.Database.Migrations
 {
     [DbContext(typeof(GameToolsDbContext))]
-    partial class GameToolsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251212081335_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,9 +33,6 @@ namespace GameTools.Database.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("CompletionProcessed")
-                        .HasColumnType("boolean");
-
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("interval");
 
@@ -43,6 +43,9 @@ namespace GameTools.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<bool>("NotificationSent")
+                        .HasColumnType("boolean");
 
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("uuid");
@@ -73,7 +76,7 @@ namespace GameTools.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Profiles");
+                    b.ToTable("ProfileSettings");
                 });
 
             modelBuilder.Entity("GameTools.Database.GameTimer", b =>

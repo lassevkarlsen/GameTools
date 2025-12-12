@@ -1,12 +1,19 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using GameTools.Workers.Events;
+
+using LVK.Events;
+
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
+
+using Radzen;
 
 namespace GameTools.Components.Layout;
 
 public partial class MainLayout
 {
-    [Inject]
-    public NavigationManager? NavigationManager { get; set; }
+    private NavigationManager? _navigationManager;
+    private readonly IEventBus _eventBus;
+    private readonly NotificationService _notificationService;
 
     private bool _sidebarExpanded = true;
 
@@ -14,10 +21,21 @@ public partial class MainLayout
     private string? _branch;
 
     private string _pageTitle = "Home";
-    private Guid? _userId;
+    private Guid? _profileId;
+
+    private IDisposable? _subscription;
+
+    public MainLayout(NavigationManager navigationManager, IEventBus eventBus, NotificationService notificationService)
+    {
+        _navigationManager = navigationManager ?? throw new ArgumentNullException(nameof(navigationManager));
+        _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+        _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+    }
 
     protected override void OnInitialized()
     {
+        base.OnInitialized();
+
         string idFileName = "git_id.txt";
         if (File.Exists(idFileName))
         {
@@ -31,7 +49,25 @@ public partial class MainLayout
             _branch = "develop";
         }
 
-        base.OnInitialized();
+        _subscription ??= _eventBus.Subscribe<TimerExpiredEvent>(OnTimerExpired);
+    }
+
+    private async Task OnTimerExpired(TimerExpiredEvent arg)
+    {
+        if (arg.Timer.ProfileId != _profileId)
+        {
+            return;
+        }
+
+        _notificationService.Notify(new NotificationMessage
+        {
+            Severity = NotificationSeverity.Error,
+            Summary = "Timer expired",
+            Detail = $"Timer '{arg.Timer.Name}' expired",
+            Duration = 15_000,
+            ShowProgress = true,
+            Payload = Guid.NewGuid(),
+        });
     }
 
     private void SetPageTitle(string title)
@@ -40,9 +76,9 @@ public partial class MainLayout
         StateHasChanged();
     }
 
-    private void SetUserId(Guid userId)
+    private void SetProfileId(Guid profileId)
     {
-        _userId = userId;
+        _profileId = profileId;
         StateHasChanged();
     }
 }

@@ -8,22 +8,22 @@ public class BasePage : ComponentBase
     public Action<string>? SetPageTitle { get; set; }
 
     [CascadingParameter]
-    public Action<Guid>? SetUserId { get; set; }
+    public Action<Guid>? SetProfileId { get; set; }
 
     [Parameter]
-    public string? UserIdString { get; set; }
+    public string? ProfileIdString { get; set; }
 
-    public Guid? UserId { get; set; }
+    public Guid? ProfileId { get; set; }
 
     public bool IsAuthenticated { get; set; }
 
     protected override Task OnInitializedAsync()
     {
-        IsAuthenticated = Guid.TryParse(UserIdString, out Guid userId);
+        IsAuthenticated = Guid.TryParse(ProfileIdString, out Guid profileId);
         if (IsAuthenticated)
         {
-            UserId = userId;
-            SetUserId?.Invoke(UserId.Value);
+            ProfileId = profileId;
+            SetProfileId?.Invoke(ProfileId.Value);
         }
 
         return base.OnInitializedAsync();

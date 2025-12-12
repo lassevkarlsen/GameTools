@@ -10,5 +10,19 @@ public class GameToolsDbContext : DbContext
 
     }
 
-    public DbSet<ProfileSettings> ProfileSettings { get; set; }
+    public async Task EnsureProfileExistAsync(Guid profileId)
+    {
+        Profile? existingProfile = await Profiles.FirstOrDefaultAsync(p => p.Id == profileId);
+        if (existingProfile != null)
+        {
+            return;
+        }
+
+        var newProfile = new Profile { Id = profileId, PushoverUserKey = "dummykey" };
+        Profiles.Add(newProfile);
+        await SaveChangesAsync();
+    }
+
+    public DbSet<Profile> Profiles { get; set; }
+    public DbSet<GameTimer> GameTimers { get; set; }
 }

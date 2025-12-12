@@ -1,11 +1,11 @@
 ﻿@inherits BasePage
 @page "/"
-@page "/{userIdString}/"
+@page "/{profileIdString}/"
 
 <PageTitle>GameTools :: Home</PageTitle>
 
 @if (IsAuthenticated) {
-    <p>Your unique user-session URL is <a href="@($"/{UserId}/")">this url</a>.</p>
+    <p>Your unique user-session URL is <a href="@($"/{ProfileId}/")">this url</a>.</p>
     <p>Please bookmark this URL for future visits to the same persistent state.</p>
     <p>Note that not all the tools here will have persistent state.</p>
     <p>Note that no personal information is gathered beyond normal network traffic, your name, email address, etc. is not collected, nor processed.</p>
