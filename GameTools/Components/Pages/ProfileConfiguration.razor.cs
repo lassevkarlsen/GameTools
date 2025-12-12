@@ -46,29 +46,31 @@ public partial class ProfileConfiguration
     {
         await using GameToolsDbContext dbContext = await _dbContextFactory.CreateDbContextAsync();
         Profile? profile = await dbContext.Profiles.FirstOrDefaultAsync(pf => pf.Id == ProfileId);
-        if (profile != null)
+        if (profile == null)
         {
-            if (string.IsNullOrWhiteSpace(_model!.Name))
-            {
-                profile.Name = Profile.DefaultProfileName;
-            }
-            else
-            {
-                profile.Name = _model!.Name;
-            }
-
-            profile.PushoverUserKey = _model.PushoverUserKey;
-            await dbContext.SaveChangesAsync();
-
-            _notificationService.Notify(new NotificationMessage
-            {
-                Severity = NotificationSeverity.Success,
-                Summary = "Profile saved",
-                Detail = $"Profile '{profile.Name}' saved",
-                Duration = 10_000,
-                ShowProgress = true,
-                Payload = Guid.NewGuid(),
-            });
+            profile = new();
+            dbContext.Profiles.Add(profile);
         }
+
+        if (string.IsNullOrWhiteSpace(_model!.Name))
+        {
+            profile.Name = Profile.DefaultProfileName;
+        }
+        else
+        {
+            profile.Name = _model!.Name;
+        }
+
+        profile.PushoverUserKey = _model.PushoverUserKey;
+        await dbContext.SaveChangesAsync();
+
+        _notificationService.Notify(new NotificationMessage
+        {
+            Severity = NotificationSeverity.Success,
+            Summary = "Profile saved",
+            Detail = $"Profile '{profile.Name}' saved",
+            Duration = 10_000,
+            ShowProgress = true,
+            Payload = Guid.NewGuid(), });
     }
 }
