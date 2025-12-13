@@ -45,7 +45,7 @@
         }
 
         <RadzenStack Orientation="Orientation.Vertical" Style="margin-bottom: 2rem;">
-            <div style="font-size: 1.5rem; margin-bottom: -1rem;">@(timer.Name) (@timer.Duration.Format())</div>
+            <div style="font-size: 1.5rem; margin-bottom: -1rem;">@(timer.Name)</div>
             <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" >
                 <RadzenProgressBar ProgressBarStyle="@pbStyle" Style="width: 20rem;" Value="@progress" Min="0" Max="1" ShowValue="true">
                     <Template>
