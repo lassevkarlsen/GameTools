@@ -44,46 +44,48 @@
             caption = timer.CompletionProcessed ? "Expired" : "Stopped";
         }
 
-        <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Style="margin-bottom: 1rem;">
-            @if (timer.ElapsesAt == null || timer.ElapsesAt < DateTimeOffset.UtcNow)
-            {
-                if (timer.CompletionProcessed)
+        <RadzenStack Orientation="Orientation.Vertical" Style="margin-bottom: 2rem;">
+            <div style="font-size: 1.5rem; margin-bottom: -1rem;">@(timer.Name) (@timer.Duration.Format())</div>
+            <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" >
+                <RadzenProgressBar ProgressBarStyle="@pbStyle" Style="width: 20rem;" Value="@progress" Min="0" Max="1" ShowValue="true">
+                    <Template>
+                        @caption
+                    </Template>
+                </RadzenProgressBar>
+                @if (timer.ElapsesAt == null || timer.ElapsesAt < DateTimeOffset.UtcNow)
                 {
-                    <RadzenIcon Style="cursor: pointer;" Icon="replay" @onclick="@(() => StartOrResumeTimer(timer))"/>
+                    if (timer.CompletionProcessed)
+                    {
+                        <RadzenIcon Style="cursor: pointer;" Icon="replay" @onclick="@(() => StartOrResumeTimer(timer))"/>
+                    }
+                    else
+                    {
+                        <RadzenIcon Style="cursor: pointer;" Icon="play_circle" @onclick="@(() => StartOrResumeTimer(timer))"/>
+                    }
                 }
                 else
                 {
-                    <RadzenIcon Style="cursor: pointer;" Icon="play_circle" @onclick="@(() => StartOrResumeTimer(timer))"/>
+                    <RadzenIcon Icon="play_circle" IconColor="#aaaaaa"/>
                 }
-            }
-            else
-            {
-                <RadzenIcon Icon="play_circle" IconColor="#aaaaaa"/>
-            }
-            @if (timer.ElapsesAt != null && timer.ElapsesAt >= DateTimeOffset.UtcNow)
-            {
-                <RadzenIcon Style="cursor: pointer;" Icon="pause" @onclick="@(() => PauseTimer(timer))"/>
-            }
-            else
-            {
-                <RadzenIcon Icon="pause" IconColor="#aaaaaa"/>
-            }
+                @if (timer.ElapsesAt != null && timer.ElapsesAt >= DateTimeOffset.UtcNow)
+                {
+                    <RadzenIcon Style="cursor: pointer;" Icon="pause" @onclick="@(() => PauseTimer(timer))"/>
+                }
+                else
+                {
+                    <RadzenIcon Icon="pause" IconColor="#aaaaaa"/>
+                }
 
-            @if ((timer.ElapsesAt != null && timer.ElapsesAt >= DateTimeOffset.UtcNow) || timer.Remaining != null)
-            {
-                <RadzenIcon Style="cursor: pointer;" Icon="stop" @onclick="@(() => StopTimer(timer))"/>
-            }
-            else
-            {
-                <RadzenIcon Icon="stop" IconColor="#aaaaaa"/>
-            }
-            <RadzenIcon Style="cursor: pointer;" Icon="delete" @onclick="@(() => DeleteTimer(timer))"/>
-
-            <RadzenProgressBar ProgressBarStyle="@pbStyle" Style="width: 20rem; height: 1rem;" Value="@progress" Min="0" Max="1" ShowValue="true">
-                <Template>
-                    @caption
-                </Template>
-            </RadzenProgressBar> @(timer.Name) (@timer.Duration.Format())
+                @if ((timer.ElapsesAt != null && timer.ElapsesAt >= DateTimeOffset.UtcNow) || timer.Remaining != null)
+                {
+                    <RadzenIcon Style="cursor: pointer;" Icon="stop" @onclick="@(() => StopTimer(timer))"/>
+                }
+                else
+                {
+                    <RadzenIcon Icon="stop" IconColor="#aaaaaa"/>
+                }
+                <RadzenIcon Style="cursor: pointer;" Icon="delete" @onclick="@(() => DeleteTimer(timer))"/>
+            </RadzenStack>
         </RadzenStack>
     }
 
