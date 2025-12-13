@@ -1,4 +1,106 @@
-﻿@inherits BasePage
+﻿@using GameTools.Database
+@inherits BasePage
 @page "/{profileIdString}/shopping"
 
 <PageTitle>GameTools :: General Tools :: Shopping List</PageTitle>
+
+@foreach (ShoppingListModel category in _categories)
+{
+    <RadzenPanel @key="@($"category_{category.Id}")" AllowCollapse="true" Style="margin-bottom: 1rem;">
+        <HeaderTemplate>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Style="margin-bottom: 0.5rem;">
+                <RadzenIcon Icon="category"/>
+                <RadzenTextBox Style="width: 15rem;" Value="@category.CategoryName" ValueChanged="@(newName => UpdateCategoryName(category, newName))"/>
+                <RadzenButton ButtonStyle="ButtonStyle.Base" Size="ButtonSize.Small" Icon="delete" Click="@(() => DeleteCategory(category))"/>
+            </RadzenStack>
+        </HeaderTemplate>
+        <ChildContent>
+            @foreach (ShoppingListItem item in category.Items)
+            {
+                <RadzenRow Style="margin-bottom: 0.5rem;">
+                    <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Style="width: 100%;">
+                        <div style="width: 1rem;"></div>
+                        @if (item.Required <= item.Current)
+                        {
+                            <RadzenIcon Icon="check"/>
+                        }
+                        else if (item.Current == 0)
+                        {
+                            <RadzenIcon Icon="pause"/>
+                        }
+                        else
+                        {
+                            <RadzenIcon Icon="fast_forward"/>
+                        }
+                        <RadzenTextBox Style="width: 15rem;" Value="@item.Name" ValueChanged="@(newName => UpdateItemName(item, newName))"/>
+                        <RadzenNumeric Style="width: 5rem;" Min="1" Value="@item.Required" ValueChanged="@((int newRequired) => UpdateItemRequired(item, newRequired))"/>
+                        <RadzenNumeric Style="width: 5rem;" Min="0" Value="@item.Current" ValueChanged="@((int newCurrent) => UpdateItemCurrent(item, newCurrent))"/>
+                        <RadzenButton ButtonStyle="ButtonStyle.Base" Size="ButtonSize.Small" Icon="delete" Click="@(() => DeleteItem(item))"/>
+                    </RadzenStack>
+                </RadzenRow>
+            }
+            <EditForm Model="@category" OnValidSubmit="@(() => AddItemToCategory(category))">
+                @* <DataAnnotationsValidator /> *@
+                <RadzenRow Style="margin-bottom: 0.5rem;">
+                    <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Style="width: 100%;">
+                        <div style="width: 1rem;"></div>
+                        <RadzenIcon Icon="add"/>
+                        <RadzenTextBox @key="@($"add_item_{category.Id}")" Style="width: 15rem;" @bind-Value="@category.NewItemName"/>
+                        @* <RadzenNumeric Style="width: 5rem;" @bind-Value="@category.NewItemRequired"/> *@
+                        @* <RadzenNumeric Style="width: 5rem;" @bind-Value="@category.NewItemCurrent"/> *@
+                        @* <ValidationMessage For="@(() => category.NewItemRequired)" /> *@
+                        @* <ValidationMessage For="@(() => category.NewItemCurrent)" /> *@
+                    </RadzenStack>
+                </RadzenRow>
+                @* <ValidationSummary/> *@
+            </EditForm>
+        </ChildContent>
+        <SummaryTemplate>
+            @if (@category.Items.Count == 0) {
+                <p>Empty category</p>
+            }
+            else
+            {
+                int completed = category.Items.Count(i => i.Current >= i.Required);
+                int notStarted = category.Items.Count(i => i.Current == 0);
+                int inProgress = category.Items.Count(i => i.Current > 0 && i.Current < i.Required);
+                int totalToGet = category.Items.Sum(i => i.Required);
+                int totalGotten = category.Items.Sum(i => Math.Min(i.Required, i.Current));
+
+                var sections = new List<string>();
+                if (totalGotten == totalToGet)
+                {
+                    sections.Add("All items completed");
+                }
+                else
+                {
+                    if (completed > 0)
+                        sections.Add($"{completed} completed");
+
+                    if (inProgress > 0)
+                        sections.Add($"{inProgress} in progress");
+
+                    if (notStarted > 0)
+                        sections.Add($"{notStarted} not yet started");
+
+                    if (totalGotten > 0)
+                        sections.Add($"{totalGotten} of {totalToGet} completed");
+                }
+
+                <p>
+                    @category.Items.Count item@(category.Items.Count != 1 ? "s" : ""),
+                    @string.Join(", ", sections).
+                </p>
+            }
+        </SummaryTemplate>
+    </RadzenPanel>
+}
+
+<EditForm Model="this" OnSubmit="@AddNewCategory">
+    <RadzenRow Style="margin-top: 1rem;">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+            <RadzenIcon Icon="add" />
+            <RadzenTextBox Style="width: 15rem;" Placeholder="New category name" @bind-Value="_newCategoryName"/>
+        </RadzenStack>
+    </RadzenRow>
+</EditForm>

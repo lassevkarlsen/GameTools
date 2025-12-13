@@ -31,6 +31,9 @@
       <Compile Update="Components\Pages\ProfileConfigurationModel.cs">
         <DependentUpon>ProfileConfiguration.razor</DependentUpon>
       </Compile>
+      <Compile Update="Components\Pages\ShoppingListModel.cs">
+        <DependentUpon>ShoppingList.razor</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

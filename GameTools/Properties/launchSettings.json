@@ -6,7 +6,7 @@
         "dotnetRunMessages": true,
         "launchBrowser": true,
         "applicationUrl": "http://localhost:5140",
-        "launchUrl": "http://localhost:5140/903a628f-87d9-4d47-9c78-b58d31f57d8f/timers",
+        "launchUrl": "http://localhost:5140/903a628f-87d9-4d47-9c78-b58d31f57d8f/shopping",
         "environmentVariables": {
           "ASPNETCORE_ENVIRONMENT": "Development"
         }
