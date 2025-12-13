@@ -6,13 +6,15 @@
 <PageTitle>GameTools :: General Tools :: Timers</PageTitle>
 
 <EditForm Model="_newTimerModel" OnSubmit="@AddTimer">
-    <DataAnnotationsValidator />
-    <RadzenIcon Icon="add" />
-    <RadzenTextBox Name="Input" Style="width: 20rem;" @bind-Value="@_newTimerModel.Input" Placeholder="Name: Duration"/>
-    @if (!string.IsNullOrWhiteSpace(_newTimerModel.ErrorMessage))
-    {
-        <RadzenAlert Severity="AlertSeverity.Error">@_newTimerModel.ErrorMessage</RadzenAlert>
-    }
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+        <DataAnnotationsValidator/>
+        <RadzenIcon Icon="add"/>
+        <RadzenTextBox Name="Input" Style="width: 20rem;" @bind-Value="@_newTimerModel.Input" Placeholder="Name: Duration"/>
+        @if (!string.IsNullOrWhiteSpace(_newTimerModel.ErrorMessage))
+        {
+            <RadzenAlert Severity="AlertSeverity.Error">@_newTimerModel.ErrorMessage</RadzenAlert>
+        }
+    </RadzenStack>
 </EditForm>
 
 @if (_timers.Any())
