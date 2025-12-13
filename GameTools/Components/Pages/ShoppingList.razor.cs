@@ -33,6 +33,7 @@ public partial class ShoppingList : IAsyncDisposable
 
         await ReloadList();
         _subscription ??= _eventBus.Subscribe<ShoppingListEditerForUserEvent>(OnShoppingListEditerForUserEvent);
+        SetPageTitle?.Invoke("General Tools :: Shopping List");
     }
 
     private async Task OnShoppingListEditerForUserEvent(ShoppingListEditerForUserEvent arg)
