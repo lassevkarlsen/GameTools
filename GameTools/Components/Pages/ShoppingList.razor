@@ -97,7 +97,7 @@
 }
 
 <EditForm Model="this" OnSubmit="@AddNewCategory">
-    <RadzenRow Style="margin-top: 1rem;">
+    <RadzenRow>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
             <RadzenIcon Icon="add" />
             <RadzenTextBox Style="width: 15rem;" Placeholder="New category name" @bind-Value="_newCategoryName"/>

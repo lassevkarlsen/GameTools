@@ -7,7 +7,7 @@
 
 <EditForm Model="_newTimerModel" OnSubmit="@AddTimer">
     <DataAnnotationsValidator />
-    <RadzenLabel Component="Input" Text="New timer"/>
+    <RadzenIcon Icon="add" />
     <RadzenTextBox Name="Input" Style="width: 20rem;" @bind-Value="@_newTimerModel.Input" Placeholder="Name: Duration"/>
     @if (!string.IsNullOrWhiteSpace(_newTimerModel.ErrorMessage))
     {
