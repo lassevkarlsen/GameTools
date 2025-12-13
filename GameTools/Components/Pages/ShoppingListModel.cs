@@ -13,4 +13,5 @@ public class ShoppingListModel
     public int? NewItemRequired { get; set; }
     public int? NewItemCurrent { get; set; }
     public bool AllowEditName { get; set; } = false;
+    public bool AllowAddItem { get; set; } = false;
 }

@@ -19,6 +19,10 @@
                     <RadzenText TextStyle="TextStyle.H6" Style="cursor: pointer;" Text="@category.CategoryName" @onclick="() => category.AllowEditName = true"/>
                 }
                 <RadzenButton ButtonStyle="ButtonStyle.Base" Size="ButtonSize.Small" Icon="delete" Click="@(() => DeleteCategory(category))"/>
+                @if (!category.AllowAddItem)
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Base" Size="ButtonSize.Small" Icon="add" Click="@(() => category.AllowAddItem = true)"/>
+                }
             </RadzenStack>
         </HeaderTemplate>
         <ChildContent>
@@ -53,23 +57,26 @@
                     </RadzenStack>
                 </RadzenRow>
             }
-            <EditForm Model="@category" OnValidSubmit="@(() => AddItemToCategory(category))">
-                @* <DataAnnotationsValidator /> *@
-                <RadzenRow Style="margin-bottom: 0.5rem;">
-                    <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Style="width: 100%;">
-                        @* <div style="width: 1rem;"></div> *@
-                        <RadzenIcon Icon="add"/>
-                        <RadzenFormField Text="New item name">
-                            <RadzenTextBox @key="@($"add_item_{category.Id}")" Style="width: 15rem;" @bind-Value="@category.NewItemName"/>
-                        </RadzenFormField>
-                        @* <RadzenNumeric Style="width: 5rem;" @bind-Value="@category.NewItemRequired"/> *@
-                        @* <RadzenNumeric Style="width: 5rem;" @bind-Value="@category.NewItemCurrent"/> *@
-                        @* <ValidationMessage For="@(() => category.NewItemRequired)" /> *@
-                        @* <ValidationMessage For="@(() => category.NewItemCurrent)" /> *@
-                    </RadzenStack>
-                </RadzenRow>
-                @* <ValidationSummary/> *@
-            </EditForm>
+            @if (category.AllowAddItem)
+            {
+                <EditForm Model="@category" OnValidSubmit="@(() => AddItemToCategory(category))">
+                    @* <DataAnnotationsValidator /> *@
+                    <RadzenRow Style="margin-bottom: 0.5rem;">
+                        <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Style="width: 100%;">
+                            @* <div style="width: 1rem;"></div> *@
+                            <RadzenIcon Icon="add"/>
+                            <RadzenFormField Text="New item name">
+                                <RadzenTextBox @key="@($"add_item_{category.Id}")" Style="width: 15rem;" @bind-Value="@category.NewItemName"/>
+                            </RadzenFormField>
+                            @* <RadzenNumeric Style="width: 5rem;" @bind-Value="@category.NewItemRequired"/> *@
+                            @* <RadzenNumeric Style="width: 5rem;" @bind-Value="@category.NewItemCurrent"/> *@
+                            @* <ValidationMessage For="@(() => category.NewItemRequired)" /> *@
+                            @* <ValidationMessage For="@(() => category.NewItemCurrent)" /> *@
+                        </RadzenStack>
+                    </RadzenRow>
+                    @* <ValidationSummary/> *@
+                </EditForm>
+            }
         </ChildContent>
         <SummaryTemplate>
             @if (@category.Items.Count == 0) {
