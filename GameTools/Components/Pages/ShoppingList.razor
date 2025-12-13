@@ -16,7 +16,7 @@
                 }
                 else
                 {
-                    <RadzenText TextStyle="TextStyle.H6" Style="cursor: pointer; width: 15rem;" Text="@category.CategoryName" @onclick="() => category.AllowEditName = true"/>
+                    <RadzenText TextStyle="TextStyle.H6" Style="cursor: pointer;" Text="@category.CategoryName" @onclick="() => category.AllowEditName = true"/>
                 }
                 <RadzenButton ButtonStyle="ButtonStyle.Base" Size="ButtonSize.Small" Icon="delete" Click="@(() => DeleteCategory(category))"/>
             </RadzenStack>
