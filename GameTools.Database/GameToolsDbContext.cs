@@ -25,4 +25,7 @@ public class GameToolsDbContext : DbContext
 
     public DbSet<Profile> Profiles { get; set; }
     public DbSet<GameTimer> GameTimers { get; set; }
+
+    public DbSet<ShoppingListCategory> ShoppingListCategories { get; set; }
+    public DbSet<ShoppingListItem> ShoppingListItems { get; set; }
 }

@@ -16,6 +16,12 @@ public class ApplicationBootstrapper : IModuleBootstrapper
         builder.Bootstrap(new Database.ModuleBootstrapper());
         builder.Bootstrap(new Workers.ModuleBootstrapper());
 
+        builder.Services.AddRadzenCookieThemeService(options =>
+        {
+            options.Name = "GameToolsTheme";
+            options.Duration = TimeSpan.FromDays(365);
+        });
+
         builder.Services.AddPushoverClient(options =>
         {
             options.UseApiToken(builder.Configuration["Pushover:ApiToken"] ?? throw new InvalidOperationException("No Pushover API token configured"));
