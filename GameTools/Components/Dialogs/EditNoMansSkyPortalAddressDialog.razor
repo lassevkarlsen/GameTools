@@ -1,0 +1,42 @@
+@using GameTools.Database
+<EditForm Model="Model">
+    <RadzenStack Orientation="Orientation.Vertical">
+        <RadzenLabel Text="Name" Component="eName" />
+        <RadzenTextBox Name="eName" @bind-Value="Model.Name" />
+
+        <RadzenLabel Text="System Name" Component="eSystemName" />
+        <RadzenTextBox Name="eSystemName" @bind-Value="Model.SystemName" />
+
+        <RadzenLabel Text="Planet Name" Component="ePlanetName" />
+        <RadzenTextBox Name="ePlanetName" @bind-Value="Model.PlanetName" />
+
+        <RadzenLabel Text="Galaxy" Component="eGalaxy" />
+        <RadzenDropDown @bind-Value="Model.GalaxyId" Data="_galaxies" Name="eGalaxy" TextProperty="@nameof(NoMansSkyGalaxy.Name)" ValueProperty="@nameof(NoMansSkyGalaxy.Id)">
+            <Template Context="item">@((item as NoMansSkyGalaxy)!.Name) (#@((item as NoMansSkyGalaxy)!.Id))</Template>
+        </RadzenDropDown>
+
+        <RadzenLabel Text="Coordinates" Component="eCoordinatesX" />
+        <div>
+            <RadzenNumeric Name="eCoordinatesX" @bind-Value="Model.CoordinatesX" />, <RadzenNumeric @bind-Value="Model.CoordinatesY" />
+        </div>
+
+        <RadzenLabel Text="Description (markdown)" Component="eDescription" />
+        <RadzenTextArea Name="eDescription" @bind-Value="Model.Description" />
+
+        <hr/>
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Right">
+            <RadzenButton Click="SaveInformation" Text="Save" ButtonStyle="ButtonStyle.Primary" />
+            <RadzenButton Click="CancelEdit" Text="Cancel" ButtonStyle="ButtonStyle.Secondary" />
+        </RadzenStack>
+
+        <RadzenLabel Text="Portal address glyphs"/>
+        <RadzenTextBox ReadOnly="true" Name="eGlyphs" @bind-Value="Model.Address" />
+        <RadzenStack Orientation="Orientation.Horizontal">
+            <RadzenButton Style="font-family: NMS-Glyphs-Tight" Text="0" ButtonStyle="ButtonStyle.Light" />
+            <RadzenButton Style="font-family: NMS-Glyphs-Tight" Text="1" ButtonStyle="ButtonStyle.Light" />
+            <RadzenButton Style="font-family: NMS-Glyphs-Tight" Text="2" ButtonStyle="ButtonStyle.Light" />
+            <RadzenButton Style="font-family: NMS-Glyphs-Tight" Text="3" ButtonStyle="ButtonStyle.Light" />
+            <RadzenButton Style="font-family: NMS-Glyphs-Tight" Text="4" ButtonStyle="ButtonStyle.Light" />
+        </RadzenStack>
+    </RadzenStack>
+</EditForm>

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GameTools.Database;
 
-public class GuildSystem
+public class NoMansSkyGuildSystemReward
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -14,12 +14,12 @@ public class GuildSystem
     public Profile? Profile { get; set; }
 
     [Required]
+    public required int GuildSystemId { get; set; }
+    public NoMansSkyGuildSystem? GuildSystem { get; set; }
+
+    [Required]
     [MaxLength(100)]
     public required string Name { get; set; }
 
-    [Required]
-    [MaxLength(50)]
-    public required string Guild { get; set; }
-
-    public ICollection<GuildSystemReward>? Rewards { get; set; }
+    public DateTimeOffset? LastRedeemed { get; set; }
 }

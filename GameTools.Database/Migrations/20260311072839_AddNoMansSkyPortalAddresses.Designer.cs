@@ -3,6 +3,7 @@ using System;
 using GameTools.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GameTools.Database.Migrations
 {
     [DbContext(typeof(GameToolsDbContext))]
-    partial class GameToolsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260311072839_AddNoMansSkyPortalAddresses")]
+    partial class AddNoMansSkyPortalAddresses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,29 +58,6 @@ namespace GameTools.Database.Migrations
                     b.HasIndex("ProfileId");
 
                     b.ToTable("GameTimers");
-                });
-
-            modelBuilder.Entity("GameTools.Database.NoMansSkyGalaxy", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("NoMansSkyGalaxies");
                 });
 
             modelBuilder.Entity("GameTools.Database.NoMansSkyGuildSystem", b =>
@@ -152,18 +132,12 @@ namespace GameTools.Database.Migrations
                         .HasMaxLength(12)
                         .HasColumnType("character varying(12)");
 
-                    b.Property<decimal?>("CoordinatesX")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal?>("CoordinatesY")
-                        .HasColumnType("numeric");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(65536)
                         .HasColumnType("character varying(65536)");
 
-                    b.Property<int>("GalaxyId")
+                    b.Property<int>("GalaxyNumber")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -171,22 +145,10 @@ namespace GameTools.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("PlanetName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("SystemName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("GalaxyId");
 
                     b.HasIndex("ProfileId");
 
@@ -312,19 +274,11 @@ namespace GameTools.Database.Migrations
 
             modelBuilder.Entity("GameTools.Database.NoMansSkyPortalAddress", b =>
                 {
-                    b.HasOne("GameTools.Database.NoMansSkyGalaxy", "Galaxy")
-                        .WithMany()
-                        .HasForeignKey("GalaxyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("GameTools.Database.Profile", "Profile")
                         .WithMany()
                         .HasForeignKey("ProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Galaxy");
 
                     b.Navigation("Profile");
                 });

@@ -1,0 +1,42 @@
+﻿@using GameTools.Components.Dialogs
+@using GameTools.Database
+@inherits BasePage
+
+@page "/{profileIdString}/nms/portaladdresses"
+
+<PageTitle>GameTools :: No Man's Sky :: Portal Addresses</PageTitle>
+
+<RadzenButton Icon="add" Text="Add new portal address" Click="@(_ => EditAddress(new EditNoMansSkyPortalAddressDialog.ViewModel()))"/>
+
+@if (_addresses.Any())
+{
+    <hr/>
+    @foreach (NoMansSkyPortalAddress address in _addresses)
+    {
+        <RadzenStack Orientation="Orientation.Vertical">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                <RadzenText Text="@address.Name" TextStyle="TextStyle.DisplayH5"/>
+                <RadzenSplitButton Icon="content_copy" Text="Copy all" Click="@(args => OnButtonClick(args, address))">
+                    <RadzenSplitButtonItem Icon="content_copy" Text="Copy portal address for Discord" Value="copy_address_discord" />
+                    <RadzenSplitButtonItem Icon="edit" Text="Edit" Value="edit" />
+                    <RadzenSplitButtonItem Icon="delete" Text="Delete" Value="delete" />
+                </RadzenSplitButton>
+            </RadzenStack>
+            <div>
+                @if (address is { CoordinatesX: not null, CoordinatesY: not null })
+                {
+                    <span>@@@address.CoordinatesX.Value.ToString("0.00"), @address.CoordinatesY.Value.ToString("0.00") on </span>
+                }
+                @address.PlanetName in system @address.SystemName in @address.Galaxy!.Name (#@address.GalaxyId)
+            </div>
+            <RadzenMarkdown Text="@address.Description"/>
+            <span style="font-size: 24pt; font-family: NMS-Glyphs-Tight;">@address.Address</span>
+        </RadzenStack>
+    }
+}
+
+<script>
+    window.copyToClipboard = function (text) {
+        navigator.clipboard.writeText(text);
+    };
+</script>

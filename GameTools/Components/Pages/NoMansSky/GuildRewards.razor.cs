@@ -16,7 +16,7 @@ public partial class GuildRewards
     private readonly DialogService _dialogService;
     private readonly ILogger<Timers> _logger;
     private NewGuildSystemModel _newSystemModel = new();
-    private List<GuildSystem> _systems = [];
+    private List<NoMansSkyGuildSystem> _systems = [];
 
     public GuildRewards(IDbContextFactory<GameToolsDbContext> dbContextFactory, IEventBus eventBus,
         IHostApplicationLifetime hostApplicationLifetime, DialogService dialogService, ILogger<Timers> logger)
@@ -69,7 +69,7 @@ public partial class GuildRewards
 
         await using GameToolsDbContext dbContext = await _dbContextFactory.CreateDbContextAsync();
 
-        dbContext.NoMansSkyGuildSystems.Add(new GuildSystem
+        dbContext.NoMansSkyGuildSystems.Add(new NoMansSkyGuildSystem
         {
             ProfileId = ProfileId!.Value,
             Name = _newSystemModel.SystemName,
@@ -81,12 +81,12 @@ public partial class GuildRewards
         _newSystemModel.Clear();
     }
 
-    private Task OnCheckRedeemCheckbox(GuildSystemReward reward, bool value)
+    private Task OnCheckRedeemCheckbox(NoMansSkyGuildSystemReward reward, bool value)
     {
         return Task.CompletedTask;
     }
 
-    private Task OnAddRewardClicked(GuildSystem system)
+    private Task OnAddRewardClicked(NoMansSkyGuildSystem system)
     {
         return Task.CompletedTask;
         // throw new NotImplementedException();

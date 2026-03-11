@@ -3,6 +3,7 @@ using System;
 using GameTools.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GameTools.Database.Migrations
 {
     [DbContext(typeof(GameToolsDbContext))]
-    partial class GameToolsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260311073704_AddNoMansSkyGalaxies")]
+    partial class AddNoMansSkyGalaxies
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,12 +155,6 @@ namespace GameTools.Database.Migrations
                         .HasMaxLength(12)
                         .HasColumnType("character varying(12)");
 
-                    b.Property<decimal?>("CoordinatesX")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal?>("CoordinatesY")
-                        .HasColumnType("numeric");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(65536)
@@ -171,18 +168,8 @@ namespace GameTools.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("PlanetName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("uuid");
-
-                    b.Property<string>("SystemName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 

@@ -24,14 +24,14 @@
 @if (_systems.Any())
 {
     <hr/>
-    @foreach (GuildSystem system in _systems)
+    @foreach (NoMansSkyGuildSystem system in _systems)
     {
         <RadzenStack Orientation="Orientation.Vertical" Style="margin-bottom: 2rem;">
             @{
                 var titleName = $"{system.Name}: {system.Guild}";
             }
             <RadzenText Text="@titleName" TextStyle="TextStyle.DisplayH5"/>
-            @foreach (GuildSystemReward reward in system.Rewards!)
+            @foreach (NoMansSkyGuildSystemReward reward in system.Rewards!)
             {
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
                     <div style="margin-right: 1rem;"></div>

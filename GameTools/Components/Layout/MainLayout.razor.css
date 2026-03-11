@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'NMS-Glyphs-Tight';
+  src: local('NMS-Glyphs-Tight'),local('NMS-Glyphs-Tight'),url(media/fonts/NMS-Glyphs-Tight.woff) format('woff');
+}
+
 .page {
   position: relative;
   display: flex;
