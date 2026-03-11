@@ -26,14 +26,11 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Clean previous build
-        run: dotnet clean
-
-      - name: Restore dependencies
-        run: dotnet restore
-
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: |
+          dotnet restore
+          dotnet clean
+          dotnet build --configuration Release --no-restore
 
       - name: Test
         run: dotnet test --no-build --configuration Release --verbosity normal
