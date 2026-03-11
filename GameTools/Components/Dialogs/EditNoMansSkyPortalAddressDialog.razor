@@ -26,25 +26,25 @@
         <RadzenLabel Text="Portal address glyphs"/>
         <RadzenTextBox ReadOnly="true" Name="eGlyphs" @bind-Value="Model.Address" Style="font-family: NMS-Glyphs-Tight; font-size: 24pt;" />
         <RadzenStack Orientation="Orientation.Horizontal" Gap="0.1rem; padding-bottom: 0.1rem; margin-bottom: 0;">
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="0" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('0'))" />
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="1" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('1'))" />
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="2" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('2'))" />
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="3" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('3'))" />
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="4" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('4'))" />
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="5" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('5'))" />
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="6" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('6'))" />
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="7" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('7'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="0" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('0'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="1" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('1'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="2" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('2'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="3" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('3'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="4" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('4'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="5" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('5'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="6" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('6'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="7" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('7'))" />
             <RadzenButton Icon="backspace" Style="padding-left: 0; padding-right: 0;" ButtonStyle="ButtonStyle.Info" Click="RemoveLastGlyph" />
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Horizontal" Gap="0.1rem; padding-top: 0.1rem; margin-top: 0;">
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="8" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('8'))" />
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="9" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('9'))" />
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="A" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('A'))" />
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="B" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('B'))" />
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="C" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('C'))" />
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="D" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('D'))" />
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="E" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('E'))" />
-            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0;" Text="F" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('F'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="8" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('8'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="9" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('9'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="A" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('A'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="B" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('B'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="C" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('C'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="D" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('D'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="E" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('E'))" />
+            <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="F" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('F'))" />
         </RadzenStack>
 
         <hr/>
