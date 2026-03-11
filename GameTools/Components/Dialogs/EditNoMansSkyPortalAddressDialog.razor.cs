@@ -41,4 +41,20 @@ public partial class EditNoMansSkyPortalAddressDialog
     {
         _dialogService.Close(false);
     }
+
+    private void AppendGlyph(char glyph)
+    {
+        if (Model.Address.Length < 12)
+        {
+            Model.Address += glyph;
+        }
+    }
+
+    private void RemoveLastGlyph()
+    {
+        if (Model.Address.Length > 0)
+        {
+            Model.Address = Model.Address[..^1];
+        }
+    }
 }

@@ -24,6 +24,9 @@ public partial class PortalAddresses
     private readonly IJSRuntime _jsRuntime;
     private readonly NotificationService _notificationService;
     private List<NoMansSkyPortalAddress> _addresses = [];
+    private string _filter = "";
+
+    private CancellationTokenSource? _filterDebounceCts;
 
     public PortalAddresses(IDbContextFactory<GameToolsDbContext> dbContextFactory, IEventBus eventBus,
         IHostApplicationLifetime hostApplicationLifetime, DialogService dialogService, ILogger<PortalAddresses> logger,
@@ -57,6 +60,24 @@ public partial class PortalAddresses
            .OrderBy(a => a.GalaxyId)
            .ThenBy(a => a.Name)
            .ToListAsync();
+
+        if (string.IsNullOrWhiteSpace(_filter))
+        {
+            return;
+        }
+
+        string[] words = _filter.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(w => w.ToLowerInvariant()).ToArray();
+        var allAddresses = _addresses.ToList();
+        _addresses = [];
+
+        foreach (NoMansSkyPortalAddress address in allAddresses)
+        {
+            string allText = address.GetAllText().ToLowerInvariant();
+            if (words.All(w => allText.Contains(w)))
+            {
+                _addresses.Add(address);
+            }
+        }
     }
 
     private string AddressAsDiscordGlyphs(string address)
@@ -120,12 +141,12 @@ public partial class PortalAddresses
 
     private async Task EditAddress(EditNoMansSkyPortalAddressDialog.ViewModel viewModel)
     {
-        bool save = await _dialogService.OpenAsync<EditNoMansSkyPortalAddressDialog>(viewModel.IsNew ? "Add portal address" : "Edit portal address", new Dictionary<string, object?>
+        bool? save = await _dialogService.OpenAsync<EditNoMansSkyPortalAddressDialog>(viewModel.IsNew ? "Add portal address" : "Edit portal address", new Dictionary<string, object?>
         {
             ["Model"] = viewModel,
         });
 
-        if (save)
+        if (save ?? false)
         {
             await using GameToolsDbContext dbContext = await _dbContextFactory.CreateDbContextAsync();
 
@@ -189,6 +210,21 @@ public partial class PortalAddresses
             await dbContext.SaveChangesAsync();
             await ReloadAddresses();
             _notificationService.Notify(NotificationSeverity.Success, "Portal address was deleted");
+        }
+    }
+
+    private async Task FilterChange()
+    {
+        _filterDebounceCts?.Cancel();
+        _filterDebounceCts = new CancellationTokenSource();
+
+        try
+        {
+            await Task.Delay(1000, _filterDebounceCts.Token);
+            await ReloadAddresses();
+        }
+        catch (TaskCanceledException)
+        {
         }
     }
 }

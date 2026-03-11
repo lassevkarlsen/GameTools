@@ -6,13 +6,17 @@
 
 <PageTitle>GameTools :: No Man's Sky :: Portal Addresses</PageTitle>
 
-<RadzenButton Icon="add" Text="Add new portal address" Click="@(_ => EditAddress(new EditNoMansSkyPortalAddressDialog.ViewModel()))"/>
+
+<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+    <RadzenTextBox Style="width: 20rem;" Name="eFilter" Placeholder="Filter by information" @bind-Value="_filter" Change="FilterChange" Immediate="true" />
+    <RadzenButton Icon="add" Text="Add new portal address" Click="@(_ => EditAddress(new EditNoMansSkyPortalAddressDialog.ViewModel()))"/>
+</RadzenStack>
 
 @if (_addresses.Any())
 {
-    <hr/>
     @foreach (NoMansSkyPortalAddress address in _addresses)
     {
+        <hr/>
         <RadzenStack Orientation="Orientation.Vertical">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
                 <RadzenText Text="@address.Name" TextStyle="TextStyle.DisplayH5"/>

@@ -39,4 +39,6 @@ public class NoMansSkyPortalAddress
     [Required]
     [MaxLength(12)]
     public required string Address { get; set; }
+
+    public string GetAllText() => string.Join(" ", Name, SystemName, PlanetName, Description, Galaxy!.Name);
 }
