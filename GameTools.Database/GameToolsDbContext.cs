@@ -28,4 +28,7 @@ public class GameToolsDbContext : DbContext
 
     public DbSet<ShoppingListCategory> ShoppingListCategories { get; set; }
     public DbSet<ShoppingListItem> ShoppingListItems { get; set; }
+
+    public DbSet<GuildSystemReward> NoMansSkyGuildSystemRewards { get; set; }
+    public DbSet<GuildSystem> NoMansSkyGuildSystems { get; set; }
 }

@@ -158,7 +158,7 @@ public partial class ShoppingList : IAsyncDisposable
                 await dbContext.SaveChangesAsync();
                 await _eventBus.PublishAsync(new ShoppingListEditerForUserEvent
                 {
-                    ProfileId = ProfileId!.Value
+                    ProfileId = ProfileId!.Value,
                 });
             }
         }

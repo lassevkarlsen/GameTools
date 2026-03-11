@@ -1,0 +1,55 @@
+﻿@using GameTools.Database
+@inherits BasePage
+
+@page "/{profileIdString}/nms/guildrewards"
+
+<PageTitle>GameTools :: No Man's Sky :: Guild Rewards</PageTitle>
+
+<EditForm Model="_newSystemModel" OnSubmit="@AddSystem">
+    <RadzenStack Orientation="Orientation.Vertical">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+            <DataAnnotationsValidator/>
+            <RadzenIcon Icon="add"/>
+            <RadzenTextBox Name="SystemName" Style="width: 20rem;" @bind-Value="@_newSystemModel.SystemName" Placeholder="System Name"/>
+            <RadzenTextBox Name="GuildName" Style="width: 20rem;" @bind-Value="@_newSystemModel.GuildName" Placeholder="Guild Name"/>
+            <RadzenButton Text="Add" Icon="add" ButtonType="ButtonType.Submit"/>
+        </RadzenStack>
+        @if (!string.IsNullOrWhiteSpace(_newSystemModel.ErrorMessage))
+        {
+            <RadzenAlert Severity="AlertSeverity.Error">@_newSystemModel.ErrorMessage</RadzenAlert>
+        }
+    </RadzenStack>
+</EditForm>
+
+@if (_systems.Any())
+{
+    <hr/>
+    @foreach (GuildSystem system in _systems)
+    {
+        <RadzenStack Orientation="Orientation.Vertical" Style="margin-bottom: 2rem;">
+            @{
+                var titleName = $"{system.Name}: {system.Guild}";
+            }
+            <RadzenText Text="@titleName" TextStyle="TextStyle.DisplayH5"/>
+            @foreach (GuildSystemReward reward in system.Rewards!)
+            {
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                    <div style="margin-right: 1rem;"></div>
+                    @{
+                        bool redeemed = reward.LastRedeemed != null;
+                        var name = $"reward_{reward.Id}";
+                    }
+                    <RadzenCheckBox Name="@name" Checked="@redeemed" ValueChanged="@((bool value) => OnCheckRedeemCheckbox(reward, value))" />
+                    <RadzenLabel Text="@reward.Name" Component="@name" />
+                </RadzenStack>
+            }
+            @if (system.Rewards.Count < 6) {
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                    <div style="margin-right: 1rem;"></div>
+                    <RadzenIcon Icon="add" />
+                    <RadzenButton Text="Add Reward" Icon="add" ButtonType="ButtonType.Button" Clicked="@(() => OnAddRewardClicked(system))" />
+                </RadzenStack>
+            }
+        </RadzenStack>
+    }
+}

@@ -8,8 +8,8 @@
 <EditForm Model="_newTimerModel" OnSubmit="@AddTimer">
     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
         <DataAnnotationsValidator/>
-        <RadzenIcon Icon="add"/>
         <RadzenTextBox Name="Input" Style="width: 20rem;" @bind-Value="@_newTimerModel.Input" Placeholder="Name: Duration"/>
+        <RadzenButton Text="Add" Icon="add" ButtonType="ButtonType.Submit" />
         @if (!string.IsNullOrWhiteSpace(_newTimerModel.ErrorMessage))
         {
             <RadzenAlert Severity="AlertSeverity.Error">@_newTimerModel.ErrorMessage</RadzenAlert>
