@@ -7,9 +7,12 @@
 @if (IsAuthenticated) {
     <p>Your unique user-session URL is <a href="@($"/{ProfileId}/")">this url</a>.</p>
     <p>Please bookmark this URL for future visits to the same persistent state.</p>
+    <p>You can also bookmark sub-pages, as they too will contain your unique ID in the url.</p>
     <p>Note that not all the tools here will have persistent state.</p>
     <p>Note that no personal information is gathered beyond normal network traffic and what you provide in the profile configuration.</p>
     <p>Your name, email address, etc. is not collected, nor processed.</p>
+    <p>You can, however, add your <a href="https://pushover.net" target="_blank">pushover.net</a> user key, to get pushover notifications
+        from the timers application. This will not be shared with anyone, nor abused for anything but the timers.</p>
 
     <p>
         <b>NOTE!</b> Since no personal information is gathered, if you lose access to your URL there will be no automatic reclaim function to gain access.
