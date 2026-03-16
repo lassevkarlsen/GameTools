@@ -46,7 +46,7 @@ public partial class PortalAddresses
         await base.OnInitializedAsync();
         await ReloadAddresses();
 
-        // _ = PeriodicRefresh();
+        SetPageTitle?.Invoke("No Man's Sky :: Portal Addresses");
     }
 
     private async Task ReloadAddresses()
