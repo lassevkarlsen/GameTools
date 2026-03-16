@@ -93,7 +93,7 @@ public partial class PortalAddresses
 
     private async Task CopyAddressForDiscord(NoMansSkyPortalAddress address)
     {
-        await _jsRuntime.InvokeVoidAsync("copyToClipboard", AddressAsDiscordGlyphs(address.Address));
+        await _jsRuntime.InvokeVoidAsync("copyToClipboard", $"{address.Galaxy!.Name}: {AddressAsDiscordGlyphs(address.Address)}");
         _notificationService.Notify(NotificationSeverity.Success, "Portal address copied to clipboard");
     }
 
