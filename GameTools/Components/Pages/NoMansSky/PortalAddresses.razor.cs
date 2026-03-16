@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Text;
+﻿using System.Text;
 
 using GameTools.Components.Dialogs;
 using GameTools.Database;
@@ -80,6 +79,8 @@ public partial class PortalAddresses
         }
     }
 
+    private string AddressAsHex(string address) => $"0x{address.ToLowerInvariant()}";
+
     private string AddressAsDiscordGlyphs(string address)
     {
         var addressText = new StringBuilder();
@@ -94,6 +95,12 @@ public partial class PortalAddresses
     private async Task CopyAddressForDiscord(NoMansSkyPortalAddress address)
     {
         await _jsRuntime.InvokeVoidAsync("copyToClipboard", $"{address.Galaxy!.Name}: {AddressAsDiscordGlyphs(address.Address)}");
+        _notificationService.Notify(NotificationSeverity.Success, "Portal address copied to clipboard");
+    }
+
+    private async Task CopyAddressAsHex(NoMansSkyPortalAddress address)
+    {
+        await _jsRuntime.InvokeVoidAsync("copyToClipboard", $"{address.Galaxy!.Name}: {AddressAsHex(address.Address)}");
         _notificationService.Notify(NotificationSeverity.Success, "Portal address copied to clipboard");
     }
 
@@ -127,6 +134,10 @@ public partial class PortalAddresses
                 break;
             case "copy_address_discord":
                 await CopyAddressForDiscord(address);
+                break;
+
+            case "copy_address_hex":
+                await CopyAddressAsHex(address);
                 break;
 
             case "edit":

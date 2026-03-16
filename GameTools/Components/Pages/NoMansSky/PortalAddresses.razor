@@ -22,6 +22,7 @@
                 <RadzenText Text="@address.Name" TextStyle="TextStyle.DisplayH5"/>
                 <RadzenSplitButton Icon="content_copy" Text="Copy all" Click="@(args => OnButtonClick(args, address))">
                     <RadzenSplitButtonItem Icon="content_copy" Text="Copy portal address for Discord" Value="copy_address_discord" />
+                    <RadzenSplitButtonItem Icon="content_copy" Text="Copy portal address as Hex-value" Value="copy_address_hex" />
                     <RadzenSplitButtonItem Icon="edit" Text="Edit" Value="edit" />
                     <RadzenSplitButtonItem Icon="delete" Text="Delete" Value="delete" />
                 </RadzenSplitButton>

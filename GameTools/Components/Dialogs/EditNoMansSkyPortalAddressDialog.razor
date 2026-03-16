@@ -24,7 +24,10 @@
         <RadzenTextArea Name="eDescription" @bind-Value="Model.Description" />
 
         <RadzenLabel Text="Portal address glyphs"/>
-        <RadzenTextBox ReadOnly="true" Name="eGlyphs" @bind-Value="Model.Address" Style="font-family: NMS-Glyphs-Tight; font-size: 24pt;" />
+        <RadzenStack Orientation="Orientation.Horizontal" Gap="0.1rem; padding-bottom: 0.1rem; margin-bottom: 0;">
+            <RadzenTextBox ReadOnly="true" Name="eGlyphs" @bind-Value="Model.Address" Style="font-family: NMS-Glyphs-Tight; font-size: 24pt;" />
+            <RadzenButton Icon="content_paste" Click="PasteFromClipboard" />
+        </RadzenStack>
         <RadzenStack Orientation="Orientation.Horizontal" Gap="0.1rem; padding-bottom: 0.1rem; margin-bottom: 0;">
             <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="0" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('0'))" />
             <RadzenButton Variant="Variant.Flat" Style="font-family: NMS-Glyphs-Tight, serif; padding-left: 0; padding-right: 0; font-size: 24pt;" Text="1" ButtonStyle="ButtonStyle.Light" Click="@(() => AppendGlyph('1'))" />
@@ -54,3 +57,10 @@
         </RadzenStack>
     </RadzenStack>
 </EditForm>
+<script>
+    window.clipboardInterop = {
+        readText: async function () {
+            return await navigator.clipboard.readText();
+        }
+    }
+</script>
