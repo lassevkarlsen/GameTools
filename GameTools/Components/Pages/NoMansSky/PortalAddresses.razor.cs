@@ -107,17 +107,17 @@ public partial class PortalAddresses
     private async Task CopyEntireText(NoMansSkyPortalAddress address)
     {
         var builder = new StringBuilder();
-        builder.AppendLine(address.Name);
+        builder.Append("**").Append(address.Name).AppendLine("**");
 
         // copy rest in a structured manner
-        builder.Append("Galaxy: ").AppendLine(address.Galaxy!.Name);
-        builder.Append("System: ").AppendLine(address.SystemName);
-        builder.Append("Planet: ").AppendLine(address.PlanetName);
+        builder.Append("**Galaxy: **").AppendLine(address.Galaxy!.Name);
+        builder.Append("**System: **").AppendLine(address.SystemName);
+        builder.Append("**Planet: **").AppendLine(address.PlanetName);
         if (address is { CoordinatesX: not null, CoordinatesY: not null })
         {
-            builder.Append("Coordinates: ").AppendLine($"{address.CoordinatesX.Value.ToString("0.00")}, {address.CoordinatesY.Value.ToString("0.00")}");
+            builder.Append("**Coordinates: **").AppendLine($"{address.CoordinatesX.Value.ToString("0.00")}, {address.CoordinatesY.Value.ToString("0.00")}");
         }
-        builder.Append("Address: ").AppendLine(AddressAsDiscordGlyphs(address.Address));
+        builder.Append("**Address: **").AppendLine(AddressAsDiscordGlyphs(address.Address));
         builder.AppendLine();
         builder.AppendLine(address.Description);
 
