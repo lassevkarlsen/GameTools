@@ -3,6 +3,7 @@
 using LVK.Events;
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 
 using Radzen;
 
@@ -20,6 +21,8 @@ public partial class MainLayout : IAsyncDisposable
     private string _pageTitle = "Home";
     private Guid? _profileId;
 
+    private string _parameters = string.Empty;
+
     private IDisposable? _subscription;
 
     public MainLayout(NavigationManager navigationManager, IEventBus eventBus, NotificationService notificationService,
@@ -36,6 +39,20 @@ public partial class MainLayout : IAsyncDisposable
         base.OnInitialized();
 
         _subscription ??= _eventBus.Subscribe<TimerExpiredEvent>(OnTimerExpired);
+        _navigationManager.LocationChanged += OnLocationChanged;
+        UpdateParameters(_navigationManager.Uri);
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        UpdateParameters(e.Location);
+    }
+
+    private void UpdateParameters(string location)
+    {
+        var uri = new Uri(location, UriKind.Absolute);
+        _parameters = uri.Query;
+        StateHasChanged();
     }
 
     private async Task OnTimerExpired(TimerExpiredEvent arg)
@@ -72,6 +89,8 @@ public partial class MainLayout : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        _navigationManager.LocationChanged -= OnLocationChanged;
+
         if (_subscription is IAsyncDisposable subscriptionAsyncDisposable)
         {
             await subscriptionAsyncDisposable.DisposeAsync();
@@ -84,7 +103,7 @@ public partial class MainLayout : IAsyncDisposable
 
     private Task NavigateToProfilePage()
     {
-        _navigationManager.NavigateTo($"/{_profileId}/profile");
+        _navigationManager.NavigateTo($"/{_profileId}/profile{_parameters}");
         return Task.CompletedTask;
     }
 }

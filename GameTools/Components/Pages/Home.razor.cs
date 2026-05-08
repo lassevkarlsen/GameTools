@@ -33,7 +33,8 @@ public partial class Home
 
     private Task CreateSession()
     {
-        NavigationManager!.NavigateTo($"/{Guid.NewGuid()}/", forceLoad: true);
+        var query = new Uri(NavigationManager!.Uri, UriKind.Absolute).Query;
+        NavigationManager.NavigateTo($"/{Guid.NewGuid()}/{query}", forceLoad: true);
         return Task.CompletedTask;
     }
 }

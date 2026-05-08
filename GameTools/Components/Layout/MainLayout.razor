@@ -11,8 +11,9 @@
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
                 @if (_profileId != null)
                 {
-                    <RadzenAppearanceToggle />
-                    <RadzenButton ButtonStyle="ButtonStyle.Primary" Variant="Variant.Flat" Click="NavigateToProfilePage" Icon="account_circle" />
+                    <RadzenAppearanceToggle/>
+
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" Variant="Variant.Flat" Click="NavigateToProfilePage" Icon="account_circle"/>
                     @* <RadzenIcon Icon="account_circle" Style="cursor: pointer;" @onclick="@(() => NavigateToProfilePage())" /> *@
                 }
             </RadzenStack>
@@ -22,7 +23,7 @@
         <RadzenPanelMenu>
             @if (_profileId != null)
             {
-                <RadzenPanelMenuItem Text="Home" Icon="home" Path="@($"/{_profileId}/")"/>
+                <RadzenPanelMenuItem Text="Home" Icon="home" Path="@($"/{_profileId}/{_parameters}")"/>
             }
             else
             {
@@ -31,17 +32,19 @@
             @if (_profileId != null)
             {
                 <RadzenPanelMenuItem Text="General Tools" Icon="service_toolbox">
-                    <RadzenPanelMenuItem Text="Timers" Icon="timer" Path="@($"/{_profileId}/timers")"/>
-                    <RadzenPanelMenuItem Text="Shopping List" Icon="shopping_cart" Path="@($"/{_profileId}/shopping")"/>
+                    <RadzenPanelMenuItem Text="Timers" Icon="timer" Path="@($"/{_profileId}/timers{_parameters}")"/>
+                    <RadzenPanelMenuItem Text="Shopping List" Icon="shopping_cart" Path="@($"/{_profileId}/shopping{_parameters}")"/>
                 </RadzenPanelMenuItem>
+
                 <RadzenPanelMenuItem Text="Enshrouded" Icon="stadia_controller">
-                    <RadzenPanelMenuItem Text="Upgrade Gems" Icon="diamond" Path="@($"/{_profileId}/enshrouded/gems")"/>
+                    <RadzenPanelMenuItem Text="Upgrade Gems" Icon="diamond" Path="@($"/{_profileId}/enshrouded/gems{_parameters}")"/>
                 </RadzenPanelMenuItem>
+
                 @* <RadzenPanelMenuItem Text="No Man's Sky" Icon="rocket_launch"> *@
                 @*     <RadzenPanelMenuItem Text="Guilds Rewards" Icon="diamond_shine" Path="@($"/{_profileId}/nms/guildrewards")"/> *@
                 @* </RadzenPanelMenuItem> *@
                 <RadzenPanelMenuItem Text="No Man's Sky" Icon="rocket_launch">
-                    <RadzenPanelMenuItem Text="Portal Addresses" Icon="diamond_shine" Path="@($"/{_profileId}/nms/portaladdresses")"/>
+                    <RadzenPanelMenuItem Text="Portal Addresses" Icon="diamond_shine" Path="@($"/{_profileId}/nms/portaladdresses{_parameters}")"/>
                 </RadzenPanelMenuItem>
             }
         </RadzenPanelMenu>
