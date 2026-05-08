@@ -23,6 +23,12 @@
 <body>
 <Routes @rendermode="InteractiveServer"/>
 <ReconnectModal/>
+<script>
+    window.gameTools = window.gameTools || {};
+    window.gameTools.setBaseFontSize = function (isXeneonMode) {
+        document.documentElement.style.fontSize = isXeneonMode ? '18px' : '';
+    };
+</script>
 <script src="@Assets["_framework/blazor.web.js"]"></script>
 <script src="_content/Radzen.Blazor/Radzen.Blazor.js?v=@(typeof(Radzen.Colors).Assembly.GetName().Version)"></script>
 </body>

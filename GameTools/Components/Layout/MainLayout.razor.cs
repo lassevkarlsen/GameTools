@@ -5,6 +5,7 @@ using LVK.Events;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.JSInterop;
 
 using Radzen;
 
@@ -16,6 +17,7 @@ public partial class MainLayout : IAsyncDisposable
     private readonly IEventBus _eventBus;
     private readonly NotificationService _notificationService;
     private readonly CookieThemeService _cookieThemeService;
+    private readonly IJSRuntime _jsRuntime;
 
     private bool _sidebarExpanded = true;
 
@@ -29,12 +31,13 @@ public partial class MainLayout : IAsyncDisposable
     private IDisposable? _subscription;
 
     public MainLayout(NavigationManager navigationManager, IEventBus eventBus, NotificationService notificationService,
-            CookieThemeService cookieThemeService)
+            CookieThemeService cookieThemeService, IJSRuntime jsRuntime)
     {
         _navigationManager = navigationManager ?? throw new ArgumentNullException(nameof(navigationManager));
         _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
         _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
         _cookieThemeService = cookieThemeService ?? throw new ArgumentNullException(nameof(cookieThemeService));
+        _jsRuntime = jsRuntime ?? throw new ArgumentNullException(nameof(jsRuntime));
     }
 
     protected override void OnInitialized()
@@ -69,6 +72,8 @@ public partial class MainLayout : IAsyncDisposable
                 }
             }
         }
+
+        _ = _jsRuntime.InvokeVoidAsync("gameTools.setBaseFontSize", _hideHeader);
 
         StateHasChanged();
     }
