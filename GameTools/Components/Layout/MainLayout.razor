@@ -24,13 +24,16 @@
     }
     <RadzenSidebar @bind-Expanded="@_sidebarExpanded">
         <RadzenPanelMenu>
-            @if (_profileId != null)
+            @if (!_hideHeader)
             {
-                <RadzenPanelMenuItem Text="Home" Icon="home" Path="@($"/{_profileId}/{_parameters}")"/>
-            }
-            else
-            {
-                <RadzenPanelMenuItem Text="Home" Icon="home" Path="/"/>
+                @if (_profileId != null)
+                {
+                    <RadzenPanelMenuItem Text="Home" Icon="home" Path="@($"/{_profileId}/{_parameters}")"/>
+                }
+                else
+                {
+                    <RadzenPanelMenuItem Text="Home" Icon="home" Path="/"/>
+                }
             }
             @if (_profileId != null)
             {
