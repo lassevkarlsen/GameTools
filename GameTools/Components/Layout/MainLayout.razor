@@ -2,23 +2,26 @@
 
 <RadzenComponents @rendermode="InteractiveServer" />
 <RadzenLayout>
-    <RadzenHeader Orientation="LayoutOrientation.Horizontal">
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0" JustifyContent="JustifyContent.SpaceBetween">
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="10px">
-                <RadzenSidebarToggle Click="@(() => _sidebarExpanded = !_sidebarExpanded)"/>
-                <div><RadzenLabel Text="Game Tools"/> :: <RadzenLabel Text="@_pageTitle"/></div>
-            </RadzenStack>
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
-                @if (_profileId != null)
-                {
-                    <RadzenAppearanceToggle/>
+    @if (!_hideHeader)
+    {
+        <RadzenHeader Orientation="LayoutOrientation.Horizontal">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0" JustifyContent="JustifyContent.SpaceBetween">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="10px">
+                    <RadzenSidebarToggle Click="@(() => _sidebarExpanded = !_sidebarExpanded)"/>
+                    <div><RadzenLabel Text="Game Tools"/> :: <RadzenLabel Text="@_pageTitle"/></div>
+                </RadzenStack>
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+                    @if (_profileId != null)
+                    {
+                        <RadzenAppearanceToggle/>
 
-                    <RadzenButton ButtonStyle="ButtonStyle.Primary" Variant="Variant.Flat" Click="NavigateToProfilePage" Icon="account_circle"/>
-                    @* <RadzenIcon Icon="account_circle" Style="cursor: pointer;" @onclick="@(() => NavigateToProfilePage())" /> *@
-                }
+                        <RadzenButton ButtonStyle="ButtonStyle.Primary" Variant="Variant.Flat" Click="NavigateToProfilePage" Icon="account_circle"/>
+                        @* <RadzenIcon Icon="account_circle" Style="cursor: pointer;" @onclick="@(() => NavigateToProfilePage())" /> *@
+                    }
+                </RadzenStack>
             </RadzenStack>
-        </RadzenStack>
-    </RadzenHeader>
+        </RadzenHeader>
+    }
     <RadzenSidebar @bind-Expanded="@_sidebarExpanded">
         <RadzenPanelMenu>
             @if (_profileId != null)

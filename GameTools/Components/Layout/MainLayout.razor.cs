@@ -4,6 +4,7 @@ using LVK.Events;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.WebUtilities;
 
 using Radzen;
 
@@ -20,6 +21,8 @@ public partial class MainLayout : IAsyncDisposable
 
     private string _pageTitle = "Home";
     private Guid? _profileId;
+
+    private bool _hideHeader;
 
     private string _parameters = string.Empty;
 
@@ -52,6 +55,21 @@ public partial class MainLayout : IAsyncDisposable
     {
         var uri = new Uri(location, UriKind.Absolute);
         _parameters = uri.Query;
+        _hideHeader = false;
+
+        var query = QueryHelpers.ParseQuery(uri.Query);
+        if (query.TryGetValue("xeneon", out var xeneonValues))
+        {
+            foreach (var value in xeneonValues)
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    _hideHeader = true;
+                    break;
+                }
+            }
+        }
+
         StateHasChanged();
     }
 
