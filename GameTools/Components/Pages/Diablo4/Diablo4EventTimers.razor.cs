@@ -29,6 +29,7 @@ public partial class Diablo4EventTimers : IAsyncDisposable
     private Profile? _profile;
     private readonly TimeSpan _refreshGracePeriod = TimeSpan.FromSeconds(5);
     private readonly TimeSpan _refreshCheckInterval = TimeSpan.FromSeconds(1);
+    private readonly TimeSpan _notificationEnableCutoff = TimeSpan.FromMinutes(5);
 
     private bool _countdownStarted;
     private bool _refreshLoopStarted;
@@ -336,6 +337,11 @@ public partial class Diablo4EventTimers : IAsyncDisposable
         }
         else
         {
+            if (occursAt <= DateTimeOffset.UtcNow.Add(_notificationEnableCutoff))
+            {
+                return;
+            }
+
             var notification = new Diablo4EventNotification
             {
                 ProfileId = ProfileId.Value,
