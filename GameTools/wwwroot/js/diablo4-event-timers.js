@@ -117,7 +117,13 @@ window.gameTools.diablo4EventTimers = (function() {
                 const dots = getRunningDots(now);
                 if (hasValidEndTime) {
                     const millisecondsUntilEnd = Math.max(0, endTimeMilliseconds - now);
-                    timerElement.textContent = `Started ${localTimeFormatter.format(startTime)}, ends in ${formatRemaining(millisecondsUntilEnd)}${dots}`;
+                    const formattedRemaining = formatRemaining(millisecondsUntilEnd);
+                    const shouldUseApproximateMinutes = millisecondsUntilEnd >= 600000 && millisecondsUntilEnd < 3600000;
+                    const remainingWithApproximation = shouldUseApproximateMinutes
+                        ? `~${formattedRemaining}`
+                        : formattedRemaining;
+
+                    timerElement.textContent = `Started ${localTimeFormatter.format(startTime)}, ends in ${remainingWithApproximation}${dots}`;
                 } else {
                     timerElement.textContent = `Started ${localTimeFormatter.format(startTime)}, running for ${formatRemaining(elapsedMilliseconds)}${dots}`;
                 }
