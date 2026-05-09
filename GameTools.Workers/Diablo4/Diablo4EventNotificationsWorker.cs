@@ -64,7 +64,6 @@ public class Diablo4EventNotificationsWorker : BackgroundService
     {
         await using GameToolsDbContext dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
         var notifications = await dbContext.Diablo4EventNotifications
-            .Where(notification => !notification.NotificationSent)
             .OrderBy(notification => notification.OccursAt)
             .ToListAsync(cancellationToken);
 
@@ -83,7 +82,7 @@ public class Diablo4EventNotificationsWorker : BackgroundService
 
             await TryNotifyUser(first);
 
-            first.NotificationSent = true;
+            dbContext.Diablo4EventNotifications.Remove(first);
             notifications.Remove(first);
             await dbContext.SaveChangesAsync(CancellationToken.None);
 

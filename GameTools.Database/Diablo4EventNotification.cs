@@ -21,6 +21,4 @@ public class Diablo4EventNotification
     public required string EventText { get; set; }
 
     public DateTimeOffset OccursAt { get; set; }
-
-    public bool NotificationSent { get; set; } = false;
 }
