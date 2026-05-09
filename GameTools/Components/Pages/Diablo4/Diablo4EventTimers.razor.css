@@ -6,10 +6,10 @@
 }
 
 .d4-event-card {
-  width: 350px;
-  min-width: 350px;
-  max-width: 350px;
-  flex: 0 0 350px;
+  width: 340px;
+  min-width: 340px;
+  max-width: 340px;
+  flex: 0 0 340px;
   min-height: 7.5rem;
   border: 1px solid var(--rz-base-300);
   border-radius: 4px;
