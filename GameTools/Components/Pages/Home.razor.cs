@@ -4,6 +4,8 @@ namespace GameTools.Components.Pages;
 
 public partial class Home
 {
+    protected override string? LandingPageValue => LandingPageConstants.Values.Home;
+
     [Inject]
     public NavigationManager? NavigationManager { get; set; }
 

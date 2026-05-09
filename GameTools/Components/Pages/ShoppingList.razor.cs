@@ -11,6 +11,8 @@ namespace GameTools.Components.Pages;
 
 public partial class ShoppingList : IAsyncDisposable
 {
+    protected override string? LandingPageValue => LandingPageConstants.Values.ShoppingList;
+
     private readonly IDbContextFactory<GameToolsDbContext> _dbContextFactory;
     private readonly IEventBus _eventBus;
     private readonly DialogService _dialogService;

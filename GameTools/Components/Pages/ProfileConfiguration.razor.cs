@@ -8,6 +8,8 @@ namespace GameTools.Components.Pages;
 
 public partial class ProfileConfiguration
 {
+    protected override string? LandingPageValue => LandingPageConstants.Values.ProfileConfiguration;
+
     private readonly IDbContextFactory<GameToolsDbContext> _dbContextFactory;
     private readonly NotificationService _notificationService;
     private ProfileConfigurationModel? _model;

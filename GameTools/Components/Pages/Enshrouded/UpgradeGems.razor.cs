@@ -4,6 +4,8 @@ namespace GameTools.Components.Pages.Enshrouded;
 
 public partial class UpgradeGems
 {
+    protected override string? LandingPageValue => GameTools.Components.Pages.LandingPageConstants.Values.UpgradeGems;
+
     private int _currentGemLevel = 1;
     private bool _useSpringlandsNightSanctum = false;
     private bool _useRevelwoodNightSanctum = false;

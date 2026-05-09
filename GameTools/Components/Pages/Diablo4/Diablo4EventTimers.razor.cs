@@ -12,6 +12,8 @@ namespace GameTools.Components.Pages.Diablo4;
 
 public partial class Diablo4EventTimers : IAsyncDisposable
 {
+    protected override string? LandingPageValue => GameTools.Components.Pages.LandingPageConstants.Values.Diablo4EventTimers;
+
     private const string ShowLegionPreferenceKey = "d4-eventtimers-show-legion";
     private const string ShowHelltidesPreferenceKey = "d4-eventtimers-show-helltides";
     private const string ShowWorldBossesPreferenceKey = "d4-eventtimers-show-worldbosses";

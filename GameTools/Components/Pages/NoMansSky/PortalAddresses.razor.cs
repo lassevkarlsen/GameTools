@@ -15,6 +15,8 @@ namespace GameTools.Components.Pages.NoMansSky;
 
 public partial class PortalAddresses
 {
+    protected override string? LandingPageValue => GameTools.Components.Pages.LandingPageConstants.Values.NoMansSkyPortalAddresses;
+
     private readonly IDbContextFactory<GameToolsDbContext> _dbContextFactory;
     private readonly IEventBus _eventBus;
     private readonly IHostApplicationLifetime _hostApplicationLifetime;

@@ -13,6 +13,8 @@ namespace GameTools.Components.Pages;
 
 public partial class Timers : IAsyncDisposable
 {
+    protected override string? LandingPageValue => LandingPageConstants.Values.Timers;
+
     private readonly IDbContextFactory<GameToolsDbContext> _dbContextFactory;
     private readonly IEventBus _eventBus;
     private readonly IHostApplicationLifetime _hostApplicationLifetime;
