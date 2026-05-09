@@ -38,6 +38,7 @@ public partial class Diablo4EventTimers : IAsyncDisposable
     private bool _showWorldBosses = true;
     private CancellationTokenSource? _refreshLoopCancellationTokenSource;
     private Task? _refreshLoopTask;
+    private IDisposable? _notificationsUpdatedSubscription;
 
     public Diablo4EventTimers(IDbContextFactory<GameToolsDbContext> dbContextFactory, IEventBus eventBus,
             IJSRuntime jsRuntime, IProfilePreferences profilePreferences)
@@ -51,6 +52,25 @@ public partial class Diablo4EventTimers : IAsyncDisposable
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
+        _notificationsUpdatedSubscription = _eventBus.Subscribe<Diablo4EventNotificationsUpdatedEvent>(evt =>
+        {
+            if (_isDisposed || ProfileId is null || evt.ProfileId != ProfileId.Value)
+            {
+                return;
+            }
+
+            _ = InvokeAsync(async () =>
+            {
+                if (_isDisposed)
+                {
+                    return;
+                }
+
+                await LoadNotificationsAsync();
+                StateHasChanged();
+            });
+        });
 
         await LoadEventTypePreferencesAsync();
         RefreshSchedule();
@@ -352,6 +372,7 @@ public partial class Diablo4EventTimers : IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         _isDisposed = true;
+        _notificationsUpdatedSubscription?.Dispose();
 
         if (_refreshLoopCancellationTokenSource is not null)
         {
