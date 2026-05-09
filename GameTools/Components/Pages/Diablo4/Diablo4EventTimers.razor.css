@@ -10,11 +10,18 @@
   min-width: 320px;
   max-width: 320px;
   flex: 0 0 320px;
-  min-height: 6rem;
+  min-height: 8.5rem;
   border: 1px solid var(--rz-base-300);
   border-radius: 4px;
   padding: 1rem;
   background: var(--rz-base-background-color);
+}
+
+.d4-event-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
 }
 
 .d4-event-card.d4-event-card-soon {
@@ -27,4 +34,22 @@
 
 .d4-event-zone {
   margin-top: 0.35rem;
+}
+
+.d4-notification-button {
+  border: none;
+  background: transparent;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.d4-notification-button-off {
+  color: var(--rz-base-500);
+}
+
+.d4-notification-button-on {
+  color: var(--rz-warning);
 }
