@@ -30,6 +30,9 @@ public partial class Diablo4EventTimers : IAsyncDisposable
     private readonly TimeSpan _refreshGracePeriod = TimeSpan.FromSeconds(5);
     private readonly TimeSpan _refreshCheckInterval = TimeSpan.FromSeconds(1);
     private readonly TimeSpan _notificationEnableCutoff = TimeSpan.FromMinutes(5);
+    private readonly TimeSpan _helltideLingerDuration = TimeSpan.FromMinutes(45);
+    private readonly TimeSpan _legionLingerDuration = TimeSpan.FromMinutes(5);
+    private readonly TimeSpan _worldBossLingerDuration = TimeSpan.FromMinutes(5);
 
     private bool _countdownStarted;
     private bool _refreshLoopStarted;
@@ -213,11 +216,12 @@ public partial class Diablo4EventTimers : IAsyncDisposable
         Diablo4Schedule? schedule = await client.GetFromJsonAsync<Diablo4Schedule>("https://helltides.com/api/schedule");
 
         List<Diablo4Event> refreshedSchedule = [];
+        DateTimeOffset now = DateTimeOffset.UtcNow;
         if (schedule is not null)
         {
-            refreshedSchedule.AddRange(schedule.WorldBosses.Where(evt => evt.StartTime >= DateTimeOffset.Now));
-            refreshedSchedule.AddRange(schedule.LegionEvents.Where(evt => evt.StartTime >= DateTimeOffset.Now));
-            refreshedSchedule.AddRange(schedule.Helltides.Where(evt => evt.StartTime >= DateTimeOffset.Now));
+            refreshedSchedule.AddRange(schedule.WorldBosses.Where(evt => IsWithinDisplayWindow(evt, now)));
+            refreshedSchedule.AddRange(schedule.LegionEvents.Where(evt => IsWithinDisplayWindow(evt, now)));
+            refreshedSchedule.AddRange(schedule.Helltides.Where(evt => IsWithinDisplayWindow(evt, now)));
             refreshedSchedule.Sort((a, b) => a.Timestamp.CompareTo(b.Timestamp));
         }
 
@@ -231,18 +235,22 @@ public partial class Diablo4EventTimers : IAsyncDisposable
     private List<Diablo4Event> GetFilteredEvents()
     {
         int enabledEventTypeCount = GetEnabledEventTypeCount();
+        DateTimeOffset now = DateTimeOffset.UtcNow;
 
         List<Diablo4Event> filteredEvents;
         lock (_refreshLock)
         {
             filteredEvents = [];
             filteredEvents.AddRange(_fullSchedule.OfType<Diablo4WorldBoss>()
+                .Where(evt => IsWithinDisplayWindow(evt, now))
                 .OrderBy(ev => ev.Timestamp)
                 .Take(GetPerTypeTakeCount(_showWorldBosses, enabledEventTypeCount)));
             filteredEvents.AddRange(_fullSchedule.OfType<Diablo4Legion>()
+                .Where(evt => IsWithinDisplayWindow(evt, now))
                 .OrderBy(ev => ev.Timestamp)
                 .Take(GetPerTypeTakeCount(_showLegionEvents, enabledEventTypeCount)));
             filteredEvents.AddRange(_fullSchedule.OfType<Diablo4Helltide>()
+                .Where(evt => IsWithinDisplayWindow(evt, now))
                 .OrderBy(ev => ev.Timestamp)
                 .Take(GetPerTypeTakeCount(_showHelltides, enabledEventTypeCount)));
         }
@@ -290,6 +298,45 @@ public partial class Diablo4EventTimers : IAsyncDisposable
             2 => 3,
             _ => 2,
         };
+    }
+
+    private bool IsWithinDisplayWindow(Diablo4Event evt)
+    {
+        return IsWithinDisplayWindow(evt, DateTimeOffset.UtcNow);
+    }
+
+    private bool IsWithinDisplayWindow(Diablo4Event evt, DateTimeOffset now)
+    {
+        if (evt.StartTime >= now)
+        {
+            return true;
+        }
+
+        return evt.StartTime.Add(GetLingerDuration(evt)) > now;
+    }
+
+    private bool IsLingeringEvent(Diablo4Event evt)
+    {
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        return evt.StartTime < now && evt.StartTime.Add(GetLingerDuration(evt)) > now;
+    }
+
+    private TimeSpan GetLingerDuration(Diablo4Event evt)
+    {
+        return evt switch
+        {
+            Diablo4Helltide => _helltideLingerDuration,
+            Diablo4Legion => _legionLingerDuration,
+            Diablo4WorldBoss => _worldBossLingerDuration,
+            _ => TimeSpan.Zero,
+        };
+    }
+
+    private string GetEventCardClass(Diablo4Event evt)
+    {
+        return IsLingeringEvent(evt)
+            ? "d4-event-card d4-event-card-lingering"
+            : "d4-event-card";
     }
 
     private bool ShouldShowNotificationToggle =>
@@ -395,7 +442,7 @@ public partial class Diablo4EventTimers : IAsyncDisposable
             bool shouldRefresh;
             lock (_refreshLock)
             {
-                shouldRefresh = _events.Any(evt => evt.StartTime <= refreshThreshold);
+                shouldRefresh = _events.Any(evt => evt.StartTime.Add(GetLingerDuration(evt)) <= refreshThreshold);
             }
 
             if (shouldRefresh)

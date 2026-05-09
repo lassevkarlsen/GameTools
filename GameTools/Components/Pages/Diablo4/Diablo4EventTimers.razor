@@ -27,10 +27,12 @@
     <div id="d4-event-timers" class="d4-event-card-container">
         @foreach (Diablo4Event evt in _events)
         {
-            if (evt.StartTime < DateTimeOffset.UtcNow)
+            if (!IsWithinDisplayWindow(evt))
             {
                 continue;
             }
+
+            string cardClass = GetEventCardClass(evt);
 
             if (evt is Diablo4Helltide helltide) {
                 if (!_showHelltides)
@@ -42,7 +44,7 @@
                 string eventId = helltide.Id.ToString();
                 bool hasNotification = HasNotification(eventType, eventId, helltide.StartTime);
 
-                <div class="d4-event-card" @onclick='() => ToggleNotificationAsync(eventType, eventId, "Helltide", helltide.StartTime)'>
+                <div class="@cardClass" @onclick='() => ToggleNotificationAsync(eventType, eventId, "Helltide", helltide.StartTime)'>
                     <div class="d4-event-body">
                         <div class="d4-event-icon d4-event-icon-helltide" aria-hidden="true">⛧</div>
                         <div class="d4-event-content">
@@ -73,7 +75,7 @@
                 string eventId = legion.Id.ToString();
                 bool hasNotification = HasNotification(eventType, eventId, legion.StartTime);
 
-                <div class="d4-event-card" @onclick='() => ToggleNotificationAsync(eventType, eventId, "Legion event", legion.StartTime)'>
+                <div class="@cardClass" @onclick='() => ToggleNotificationAsync(eventType, eventId, "Legion event", legion.StartTime)'>
                     <div class="d4-event-body">
                         <div class="d4-event-icon d4-event-icon-legion" aria-hidden="true">👣</div>
                         <div class="d4-event-content">
@@ -107,7 +109,7 @@
                     string eventId = worldBoss.Id.ToString();
                     bool hasNotification = HasNotification(eventType, eventId, worldBoss.StartTime);
 
-                    <div class="d4-event-card" @onclick='() => ToggleNotificationAsync(eventType, eventId, $"World boss {worldBoss.Name}", worldBoss.StartTime)'>
+                    <div class="@cardClass" @onclick='() => ToggleNotificationAsync(eventType, eventId, $"World boss {worldBoss.Name}", worldBoss.StartTime)'>
                         <div class="d4-event-body">
                             <div class="d4-event-icon d4-event-icon-worldboss" aria-hidden="true">👤</div>
                             <div class="d4-event-content">
@@ -137,7 +139,7 @@
                         string eventId = $"{worldBoss.Id}:{zone.Id}";
                         bool hasNotification = HasNotification(eventType, eventId, worldBoss.StartTime);
 
-                        <div class="d4-event-card" @onclick='() => ToggleNotificationAsync(eventType, eventId, $"World boss {zoneBossName} in {zone.Name}", worldBoss.StartTime)'>
+                        <div class="@cardClass" @onclick='() => ToggleNotificationAsync(eventType, eventId, $"World boss {zoneBossName} in {zone.Name}", worldBoss.StartTime)'>
                             <div class="d4-event-body">
                                 <div class="d4-event-icon d4-event-icon-worldboss" aria-hidden="true">👤</div>
                                 <div class="d4-event-content">

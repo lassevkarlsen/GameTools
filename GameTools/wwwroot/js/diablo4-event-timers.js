@@ -16,7 +16,7 @@ window.gameTools.diablo4EventTimers = (function() {
 
     function formatRemaining(millisecondsRemaining) {
         if (millisecondsRemaining <= 0) {
-            return "Now";
+            return "0s";
         }
 
         const totalSeconds = Math.floor(millisecondsRemaining / 1000);
@@ -52,6 +52,11 @@ window.gameTools.diablo4EventTimers = (function() {
         return `${seconds}s`;
     }
 
+    function getRunningDots(nowMilliseconds) {
+        const dotCount = Math.floor(nowMilliseconds / 1000) % 5;
+        return ".".repeat(dotCount);
+    }
+
     function updateTimerText(container) {
         const now = Date.now();
         const timerElements = container.querySelectorAll("[data-d4-start-time]");
@@ -63,8 +68,16 @@ window.gameTools.diablo4EventTimers = (function() {
             }
 
             const millisecondsRemaining = startTimeMilliseconds - now;
+            const startTime = new Date(startTimeMilliseconds);
+            const isRunning = millisecondsRemaining <= 0;
+            const elapsedMilliseconds = now - startTimeMilliseconds;
 
-            timerElement.textContent = `Starts at ${localTimeFormatter.format(new Date(startTimeMilliseconds))}, in ${formatRemaining(millisecondsRemaining)}`;
+            if (isRunning) {
+                const dots = getRunningDots(now);
+                timerElement.textContent = `Started ${localTimeFormatter.format(startTime)}, running for ${formatRemaining(elapsedMilliseconds)}${dots}`;
+            } else {
+                timerElement.textContent = `Starts at ${localTimeFormatter.format(startTime)}, in ${formatRemaining(millisecondsRemaining)}`;
+            }
             timerElement.title = localDateTimeFormatter.format(new Date(startTimeMilliseconds));
 
             const eventCardElement = timerElement.closest(".d4-event-card");

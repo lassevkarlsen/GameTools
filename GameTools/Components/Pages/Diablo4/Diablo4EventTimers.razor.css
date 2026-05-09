@@ -6,10 +6,10 @@
 }
 
 .d4-event-card {
-  width: 320px;
-  min-width: 320px;
-  max-width: 320px;
-  flex: 0 0 320px;
+  width: 350px;
+  min-width: 350px;
+  max-width: 350px;
+  flex: 0 0 350px;
   min-height: 7rem;
   border: 1px solid var(--rz-base-300);
   border-radius: 4px;
@@ -70,6 +70,10 @@
 
 .d4-event-card.d4-event-card-soon {
   background: color-mix(in srgb, var(--rz-base-background-color) 80%, var(--rz-warning) 20%);
+}
+
+.d4-event-card.d4-event-card-lingering {
+  background: color-mix(in srgb, var(--rz-base-background-color) 75%, var(--rz-success) 25%);
 }
 
 .d4-event-time {
