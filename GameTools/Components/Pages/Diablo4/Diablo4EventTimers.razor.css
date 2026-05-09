@@ -10,7 +10,7 @@
   min-width: 350px;
   max-width: 350px;
   flex: 0 0 350px;
-  min-height: 8.5rem;
+  min-height: 7.5rem;
   border: 1px solid var(--rz-base-300);
   border-radius: 4px;
   padding: 1rem;
@@ -24,7 +24,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  height: 0.38rem;
+  height: 0.76rem;
   border-top: 1px solid color-mix(in srgb, var(--rz-base-900) 45%, transparent);
   background: color-mix(in srgb, var(--rz-base-700) 18%, transparent);
   opacity: 0;
