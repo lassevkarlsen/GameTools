@@ -134,3 +134,13 @@
 .d4-notification-button-on {
   color: var(--rz-warning);
 }
+
+.d4-powered-by {
+  margin-top: 1rem;
+  color: var(--rz-base-600);
+  font-size: 0.9rem;
+}
+
+.d4-powered-by a {
+  color: inherit;
+}
