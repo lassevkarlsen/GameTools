@@ -63,7 +63,15 @@
                      data-d4-progress-end="@evt.EndTime.ToUnixTimeMilliseconds()"
                      @onclick='() => ToggleNotificationAsync(evt.Type, evt.Key, evt.StartTime)'>
                     <div class="d4-event-body">
-                        <div class="d4-event-icon d4-event-icon-helltide" aria-hidden="true">⛧</div>
+                        @if (evt.Type == Diablo4EventType.Helltide)
+                        {
+                            <div class="d4-event-icon d4-event-icon-helltide" aria-hidden="true">⛧</div>
+                        } else if (evt.Type == Diablo4EventType.Legion) {
+                            <div class="d4-event-icon d4-event-icon-legion" aria-hidden="true">&#x1f463;</div>
+                        } else if (evt.Type == Diablo4EventType.WorldBoss)
+                        {
+                            <div class="d4-event-icon d4-event-icon-worldboss" aria-hidden="true">&#x1f464;</div>
+                        }
                         <div class="d4-event-content">
                             <div class="d4-event-card-header">
                                 <div>@evt.DisplayTitle</div>
