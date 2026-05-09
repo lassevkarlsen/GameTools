@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.WebUtilities
+@inject NavigationManager NavigationManager
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -13,11 +16,14 @@
     <ImportMap/>
     <link rel="icon" type="image/png" href="favicon.png"/>
     <HeadOutlet @rendermode="InteractiveServer"/>
-    <style>
-        :root {
-            --rz-base-900: #000000;
-        }
-    </style>
+    @if (IsXeneonMode)
+    {
+        <style>
+            :root {
+                --rz-base-900: #000000;
+            }
+        </style>
+    }
 </head>
 
 <body>
@@ -34,3 +40,14 @@
 </body>
 
 </html>
+
+@code {
+    private bool IsXeneonMode
+    {
+        get
+        {
+            var query = QueryHelpers.ParseQuery(new Uri(NavigationManager.Uri).Query);
+            return query.TryGetValue("xeneon", out var xeneonValues) && xeneonValues.Any(value => !string.IsNullOrWhiteSpace(value));
+        }
+    }
+}
