@@ -1,6 +1,32 @@
-﻿@inherits BasePage
+﻿@using GameTools.Components.Pages.Diablo4.Models
+@inherits BasePage
 
 @page "/{profileIdString}/diablo4/eventtimers"
 
 <PageTitle>GameTools :: Diablo 4 :: Event Timers</PageTitle>
 
+@if (_events.Count > 0)
+{
+    @foreach (Diablo4Event evt in _events)
+    {
+        if (evt is Diablo4Helltide helltide) {
+            <RadzenCard Variant="Variant.Outlined">
+                <RadzenText>Helltide</RadzenText>
+                <RadzenText>@helltide.Timestamp.ToString("g")</RadzenText>
+            </RadzenCard>
+        }
+        else if (evt is Diablo4Legion legion) {
+            <RadzenCard Variant="Variant.Outlined">
+                <RadzenText>Legion event</RadzenText>
+                <RadzenText>@legion.Timestamp.ToString("g")</RadzenText>
+            </RadzenCard>
+        }
+        else if (evt is Diablo4WorldBoss worldBoss)
+        {
+            <RadzenCard Variant="Variant.Outlined">
+                <RadzenText>@worldBoss.Name</RadzenText>
+                <RadzenText>@worldBoss.Timestamp.ToString("g")</RadzenText>
+            </RadzenCard>
+        }
+    }
+}
