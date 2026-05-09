@@ -1,0 +1,69 @@
+﻿window.gameTools = window.gameTools || {};
+
+window.gameTools.diablo4EventTimers = (function() {
+    let intervalId = null;
+
+    function formatRemaining(millisecondsRemaining) {
+        if (millisecondsRemaining <= 0) {
+            return "Now";
+        }
+
+        const totalSeconds = Math.floor(millisecondsRemaining / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        if (days > 0) {
+            return `${days}d ${hours}h ${minutes}m`;
+        }
+
+        if (hours > 0) {
+            return `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        if (minutes > 0) {
+            return `${minutes}m ${seconds}s`;
+        }
+
+        return `${seconds}s`;
+    }
+
+    function updateTimerText(container) {
+        const now = Date.now();
+        const timerElements = container.querySelectorAll("[data-d4-start-time]");
+
+        for (const timerElement of timerElements) {
+            const startTimeMilliseconds = Number(timerElement.getAttribute("data-d4-start-time"));
+            if (Number.isNaN(startTimeMilliseconds)) {
+                continue;
+            }
+
+            timerElement.textContent = `Starts in ${formatRemaining(startTimeMilliseconds - now)}`;
+        }
+    }
+
+    function stop() {
+        if (intervalId !== null) {
+            clearInterval(intervalId);
+            intervalId = null;
+        }
+    }
+
+    function start(containerSelector) {
+        stop();
+
+        const container = document.querySelector(containerSelector);
+        if (!container) {
+            return;
+        }
+
+        updateTimerText(container);
+        intervalId = window.setInterval(() => updateTimerText(container), 1000);
+    }
+
+    return {
+        start,
+        stop
+    };
+})();

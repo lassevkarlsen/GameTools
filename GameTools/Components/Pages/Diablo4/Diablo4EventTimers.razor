@@ -7,26 +7,34 @@
 
 @if (_events.Count > 0)
 {
-    @foreach (Diablo4Event evt in _events)
-    {
-        if (evt is Diablo4Helltide helltide) {
-            <RadzenCard Variant="Variant.Outlined">
-                <RadzenText>Helltide</RadzenText>
-                <RadzenText>@helltide.Timestamp.ToString("g")</RadzenText>
-            </RadzenCard>
-        }
-        else if (evt is Diablo4Legion legion) {
-            <RadzenCard Variant="Variant.Outlined">
-                <RadzenText>Legion event</RadzenText>
-                <RadzenText>@legion.Timestamp.ToString("g")</RadzenText>
-            </RadzenCard>
-        }
-        else if (evt is Diablo4WorldBoss worldBoss)
+    <div id="d4-event-timers" class="d4-event-card-container">
+        @foreach (Diablo4Event evt in _events)
         {
-            <RadzenCard Variant="Variant.Outlined">
-                <RadzenText>@worldBoss.Name</RadzenText>
-                <RadzenText>@worldBoss.Timestamp.ToString("g")</RadzenText>
-            </RadzenCard>
+            if (evt.StartTime < DateTimeOffset.UtcNow)
+            {
+                continue;
+            }
+
+            if (evt is Diablo4Helltide helltide) {
+                <RadzenCard Variant="Variant.Outlined" class="d4-event-card">
+                    <RadzenText>Helltide</RadzenText>
+                    <RadzenText class="d4-event-time" data-d4-start-time="@helltide.StartTime.ToUnixTimeMilliseconds()">@helltide.StartTime.LocalDateTime.ToString("g")</RadzenText>
+                </RadzenCard>
+            }
+            else if (evt is Diablo4Legion legion) {
+                <RadzenCard Variant="Variant.Outlined" class="d4-event-card">
+                    <RadzenText>Legion event</RadzenText>
+                    <RadzenText class="d4-event-time" data-d4-start-time="@legion.StartTime.ToUnixTimeMilliseconds()">@legion.StartTime.LocalDateTime.ToString("g")</RadzenText>
+                </RadzenCard>
+            }
+            else if (evt is Diablo4WorldBoss worldBoss)
+            {
+                <RadzenCard Variant="Variant.Outlined" class="d4-event-card">
+                    <RadzenText>@worldBoss.Name</RadzenText>
+                    <RadzenText class="d4-event-time" data-d4-start-time="@worldBoss.StartTime.ToUnixTimeMilliseconds()">@worldBoss.StartTime.LocalDateTime.ToString("g")</RadzenText>
+                </RadzenCard>
+            }
         }
-    }
+    </div>
 }
+
