@@ -18,6 +18,7 @@ public partial class MainLayout : IAsyncDisposable
     private readonly NotificationService _notificationService;
     private readonly CookieThemeService _cookieThemeService;
     private readonly IJSRuntime _jsRuntime;
+    private readonly ThemeService _themeService;
 
     private bool _sidebarExpanded = true;
 
@@ -31,13 +32,14 @@ public partial class MainLayout : IAsyncDisposable
     private IDisposable? _subscription;
 
     public MainLayout(NavigationManager navigationManager, IEventBus eventBus, NotificationService notificationService,
-            CookieThemeService cookieThemeService, IJSRuntime jsRuntime)
+            CookieThemeService cookieThemeService, IJSRuntime jsRuntime, ThemeService themeService)
     {
         _navigationManager = navigationManager ?? throw new ArgumentNullException(nameof(navigationManager));
         _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
         _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
         _cookieThemeService = cookieThemeService ?? throw new ArgumentNullException(nameof(cookieThemeService));
         _jsRuntime = jsRuntime ?? throw new ArgumentNullException(nameof(jsRuntime));
+        _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
     }
 
     protected override void OnInitialized()
@@ -74,6 +76,10 @@ public partial class MainLayout : IAsyncDisposable
         }
 
         _ = _jsRuntime.InvokeVoidAsync("gameTools.setBaseFontSize", _hideHeader);
+        if (_hideHeader)
+        {
+            _themeService.SetTheme("dark");
+        }
 
         StateHasChanged();
     }
