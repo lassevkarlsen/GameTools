@@ -113,6 +113,10 @@
   margin-top: 0.35rem;
 }
 
+.d4-event-zone a {
+  color: var(--rz-primary);
+}
+
 .d4-notification-button {
   border: none;
   background: transparent;
