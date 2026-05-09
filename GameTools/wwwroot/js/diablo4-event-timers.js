@@ -2,6 +2,17 @@
 
 window.gameTools.diablo4EventTimers = (function() {
     let intervalId = null;
+    const localDateTimeFormatter = new Intl.DateTimeFormat(navigator.languages, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+    const localTimeFormatter = new Intl.DateTimeFormat(navigator.languages, {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
 
     function formatRemaining(millisecondsRemaining) {
         if (millisecondsRemaining <= 0) {
@@ -19,7 +30,15 @@ window.gameTools.diablo4EventTimers = (function() {
         }
 
         if (hours > 0) {
+            if (totalSeconds >= 600) {
+                return `${hours}h ${minutes}m`;
+            }
+
             return `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        if (minutes > 0 && totalSeconds >= 600) {
+            return `${minutes}m`;
         }
 
         if (minutes > 0) {
@@ -39,7 +58,8 @@ window.gameTools.diablo4EventTimers = (function() {
                 continue;
             }
 
-            timerElement.textContent = `Starts in ${formatRemaining(startTimeMilliseconds - now)}`;
+            timerElement.textContent = `Starts at ${localTimeFormatter.format(new Date(startTimeMilliseconds))}, in ${formatRemaining(startTimeMilliseconds - now)}`;
+            timerElement.title = localDateTimeFormatter.format(new Date(startTimeMilliseconds));
         }
     }
 

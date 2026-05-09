@@ -16,23 +16,23 @@
             }
 
             if (evt is Diablo4Helltide helltide) {
-                <RadzenCard Variant="Variant.Outlined" class="d4-event-card">
-                    <RadzenText>Helltide</RadzenText>
-                    <RadzenText class="d4-event-time" data-d4-start-time="@helltide.StartTime.ToUnixTimeMilliseconds()">@helltide.StartTime.LocalDateTime.ToString("g")</RadzenText>
-                </RadzenCard>
+                <div class="d4-event-card">
+                    <div>Helltide</div>
+                    <div class="d4-event-time" data-d4-start-time="@helltide.StartTime.ToUnixTimeMilliseconds()">@helltide.StartTime.LocalDateTime.ToString("g")</div>
+                </div>
             }
             else if (evt is Diablo4Legion legion) {
-                <RadzenCard Variant="Variant.Outlined" class="d4-event-card">
-                    <RadzenText>Legion event</RadzenText>
-                    <RadzenText class="d4-event-time" data-d4-start-time="@legion.StartTime.ToUnixTimeMilliseconds()">@legion.StartTime.LocalDateTime.ToString("g")</RadzenText>
-                </RadzenCard>
+                <div class="d4-event-card">
+                    <div>Legion event</div>
+                    <div class="d4-event-time" data-d4-start-time="@legion.StartTime.ToUnixTimeMilliseconds()">@legion.StartTime.LocalDateTime.ToString("g")</div>
+                </div>
             }
             else if (evt is Diablo4WorldBoss worldBoss)
             {
-                <RadzenCard Variant="Variant.Outlined" class="d4-event-card">
-                    <RadzenText>@worldBoss.Name</RadzenText>
-                    <RadzenText class="d4-event-time" data-d4-start-time="@worldBoss.StartTime.ToUnixTimeMilliseconds()">@worldBoss.StartTime.LocalDateTime.ToString("g")</RadzenText>
-                </RadzenCard>
+                <div class="d4-event-card">
+                    <div>@worldBoss.Name</div>
+                    <div class="d4-event-time" data-d4-start-time="@worldBoss.StartTime.ToUnixTimeMilliseconds()">@worldBoss.StartTime.LocalDateTime.ToString("g")</div>
+                </div>
             }
         }
     </div>

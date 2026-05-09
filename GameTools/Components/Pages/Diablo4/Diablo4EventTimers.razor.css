@@ -6,6 +6,16 @@
 }
 
 .d4-event-card {
-  min-width: 220px;
-  flex: 1 1 220px;
+  width: 420px;
+  min-width: 420px;
+  max-width: 420px;
+  flex: 0 0 420px;
+  border: 1px solid var(--rz-base-300);
+  border-radius: 4px;
+  padding: 1rem;
+  background: var(--rz-base-background-color);
+}
+
+.d4-event-time {
+  font-variant-numeric: tabular-nums;
 }
