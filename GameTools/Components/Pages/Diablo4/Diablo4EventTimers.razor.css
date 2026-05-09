@@ -15,6 +15,50 @@
   border-radius: 4px;
   padding: 1rem;
   background: var(--rz-base-background-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.d4-event-body {
+  position: relative;
+  min-height: 100%;
+}
+
+.d4-event-icon {
+  position: absolute;
+  left: -3.1rem;
+  top: -2.9rem;
+  transform: none;
+  font-size: 7.5rem;
+  line-height: 1;
+  color: var(--rz-base-900);
+  font-family: "Segoe UI Symbol", "Noto Sans Symbols2", "Arial Unicode MS", sans-serif;
+  opacity: 0.12;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.d4-event-icon-helltide {
+  left: -3.45rem;
+  top: -3.2rem;
+  font-size: 8.6rem;
+  text-shadow: -0.02em 0 currentColor, 0.02em 0 currentColor, 0 -0.02em currentColor, 0 0.02em currentColor;
+}
+
+.d4-event-icon-legion {
+  left: -2.1rem;
+  top: -1.9rem;
+}
+
+.d4-event-icon-worldboss {
+  left: -2rem;
+  top: -1.8rem;
+}
+
+.d4-event-content {
+  position: relative;
+  z-index: 1;
 }
 
 .d4-event-card-header {
