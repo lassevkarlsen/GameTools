@@ -122,7 +122,7 @@ window.gameTools.diablo4EventTimers = (function() {
                     timerElement.textContent = `Started ${localTimeFormatter.format(startTime)}, running for ${formatRemaining(elapsedMilliseconds)}${dots}`;
                 }
             } else {
-                timerElement.textContent = `Starts at ${localTimeFormatter.format(startTime)}, in ${formatRemaining(millisecondsRemaining)}`;
+                timerElement.textContent = `Starts ${localTimeFormatter.format(startTime)}, in ${formatRemaining(millisecondsRemaining)}`;
             }
             timerElement.title = localDateTimeFormatter.format(new Date(startTimeMilliseconds));
 
