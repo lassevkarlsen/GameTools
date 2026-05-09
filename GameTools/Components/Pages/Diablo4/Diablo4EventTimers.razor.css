@@ -19,3 +19,7 @@
 .d4-event-time {
   font-variant-numeric: tabular-nums;
 }
+
+.d4-event-zone {
+  margin-top: 0.35rem;
+}

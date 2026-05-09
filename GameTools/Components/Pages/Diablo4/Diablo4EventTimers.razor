@@ -29,10 +29,26 @@
             }
             else if (evt is Diablo4WorldBoss worldBoss)
             {
-                <div class="d4-event-card">
-                    <div>@worldBoss.Name</div>
-                    <div class="d4-event-time" data-d4-start-time="@worldBoss.StartTime.ToUnixTimeMilliseconds()">@worldBoss.StartTime.LocalDateTime.ToString("g")</div>
-                </div>
+                if (worldBoss.Zones.Count == 0)
+                {
+                    <div class="d4-event-card">
+                        <div>@worldBoss.Name</div>
+                        <div class="d4-event-time" data-d4-start-time="@worldBoss.StartTime.ToUnixTimeMilliseconds()">@worldBoss.StartTime.LocalDateTime.ToString("g")</div>
+                    </div>
+                }
+                else
+                {
+                    foreach (Diablo4Zone zone in worldBoss.Zones)
+                    {
+                        string zoneBossName = string.IsNullOrWhiteSpace(zone.Boss) ? worldBoss.Name : zone.Boss;
+
+                        <div class="d4-event-card">
+                            <div>@zoneBossName</div>
+                            <div class="d4-event-time" data-d4-start-time="@worldBoss.StartTime.ToUnixTimeMilliseconds()">@worldBoss.StartTime.LocalDateTime.ToString("g")</div>
+                            <div class="d4-event-zone">Spawns in <a href="https://helltides.com/worldboss" target="_blank" rel="noopener noreferrer">@zone.Name</a></div>
+                        </div>
+                    }
+                }
             }
         }
     </div>
