@@ -44,7 +44,10 @@
                 string eventId = helltide.Id.ToString();
                 bool hasNotification = HasNotification(eventType, eventId, helltide.StartTime);
 
-                <div class="@cardClass" @onclick='() => ToggleNotificationAsync(eventType, eventId, "Helltide", helltide.StartTime)'>
+                <div class="@cardClass"
+                     data-d4-progress-start="@helltide.StartTime.ToUnixTimeMilliseconds()"
+                     data-d4-progress-end="@helltide.StartTime.Add(GetLingerDuration(helltide)).ToUnixTimeMilliseconds()"
+                     @onclick='() => ToggleNotificationAsync(eventType, eventId, "Helltide", helltide.StartTime)'>
                     <div class="d4-event-body">
                         <div class="d4-event-icon d4-event-icon-helltide" aria-hidden="true">⛧</div>
                         <div class="d4-event-content">
@@ -63,6 +66,9 @@
                             <div class="d4-event-time" data-d4-start-time="@helltide.StartTime.ToUnixTimeMilliseconds()">@helltide.StartTime.LocalDateTime.ToString("g")</div>
                         </div>
                     </div>
+                    <div class="d4-event-progress" aria-hidden="true">
+                        <div class="d4-event-progress-fill"></div>
+                    </div>
                 </div>
             }
             else if (evt is Diablo4Legion legion) {
@@ -75,7 +81,10 @@
                 string eventId = legion.Id.ToString();
                 bool hasNotification = HasNotification(eventType, eventId, legion.StartTime);
 
-                <div class="@cardClass" @onclick='() => ToggleNotificationAsync(eventType, eventId, "Legion event", legion.StartTime)'>
+                <div class="@cardClass"
+                     data-d4-progress-start="@legion.StartTime.ToUnixTimeMilliseconds()"
+                     data-d4-progress-end="@legion.StartTime.Add(GetLingerDuration(legion)).ToUnixTimeMilliseconds()"
+                     @onclick='() => ToggleNotificationAsync(eventType, eventId, "Legion event", legion.StartTime)'>
                     <div class="d4-event-body">
                         <div class="d4-event-icon d4-event-icon-legion" aria-hidden="true">👣</div>
                         <div class="d4-event-content">
@@ -94,6 +103,9 @@
                             <div class="d4-event-time" data-d4-start-time="@legion.StartTime.ToUnixTimeMilliseconds()">@legion.StartTime.LocalDateTime.ToString("g")</div>
                         </div>
                     </div>
+                    <div class="d4-event-progress" aria-hidden="true">
+                        <div class="d4-event-progress-fill"></div>
+                    </div>
                 </div>
             }
             else if (evt is Diablo4WorldBoss worldBoss)
@@ -109,7 +121,10 @@
                     string eventId = worldBoss.Id.ToString();
                     bool hasNotification = HasNotification(eventType, eventId, worldBoss.StartTime);
 
-                    <div class="@cardClass" @onclick='() => ToggleNotificationAsync(eventType, eventId, $"World boss {worldBoss.Name}", worldBoss.StartTime)'>
+                    <div class="@cardClass"
+                         data-d4-progress-start="@worldBoss.StartTime.ToUnixTimeMilliseconds()"
+                         data-d4-progress-end="@worldBoss.StartTime.Add(GetLingerDuration(worldBoss)).ToUnixTimeMilliseconds()"
+                         @onclick='() => ToggleNotificationAsync(eventType, eventId, $"World boss {worldBoss.Name}", worldBoss.StartTime)'>
                         <div class="d4-event-body">
                             <div class="d4-event-icon d4-event-icon-worldboss" aria-hidden="true">👤</div>
                             <div class="d4-event-content">
@@ -128,6 +143,9 @@
                                 <div class="d4-event-time" data-d4-start-time="@worldBoss.StartTime.ToUnixTimeMilliseconds()">@worldBoss.StartTime.LocalDateTime.ToString("g")</div>
                             </div>
                         </div>
+                        <div class="d4-event-progress" aria-hidden="true">
+                            <div class="d4-event-progress-fill"></div>
+                        </div>
                     </div>
                 }
                 else
@@ -139,7 +157,10 @@
                         string eventId = $"{worldBoss.Id}:{zone.Id}";
                         bool hasNotification = HasNotification(eventType, eventId, worldBoss.StartTime);
 
-                        <div class="@cardClass" @onclick='() => ToggleNotificationAsync(eventType, eventId, $"World boss {zoneBossName} in {zone.Name}", worldBoss.StartTime)'>
+                        <div class="@cardClass"
+                             data-d4-progress-start="@worldBoss.StartTime.ToUnixTimeMilliseconds()"
+                             data-d4-progress-end="@worldBoss.StartTime.Add(GetLingerDuration(worldBoss)).ToUnixTimeMilliseconds()"
+                             @onclick='() => ToggleNotificationAsync(eventType, eventId, $"World boss {zoneBossName} in {zone.Name}", worldBoss.StartTime)'>
                             <div class="d4-event-body">
                                 <div class="d4-event-icon d4-event-icon-worldboss" aria-hidden="true">👤</div>
                                 <div class="d4-event-content">
@@ -158,6 +179,9 @@
                                     <div class="d4-event-time" data-d4-start-time="@worldBoss.StartTime.ToUnixTimeMilliseconds()">@worldBoss.StartTime.LocalDateTime.ToString("g")</div>
                                     <div class="d4-event-zone">Spawns in <a href="https://helltides.com/worldboss" target="_blank" rel="noopener noreferrer">@zone.Name</a></div>
                                 </div>
+                            </div>
+                            <div class="d4-event-progress" aria-hidden="true">
+                                <div class="d4-event-progress-fill"></div>
                             </div>
                         </div>
                     }

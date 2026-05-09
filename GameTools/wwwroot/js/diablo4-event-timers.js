@@ -57,6 +57,42 @@ window.gameTools.diablo4EventTimers = (function() {
         return ".".repeat(dotCount);
     }
 
+    function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
+    function updateProgressBar(eventCardElement, now, startTimeMilliseconds) {
+        const progressElement = eventCardElement.querySelector(".d4-event-progress");
+        if (!progressElement) {
+            return;
+        }
+
+        const progressFillElement = progressElement.querySelector(".d4-event-progress-fill");
+        if (!progressFillElement) {
+            return;
+        }
+
+        const endTimeMilliseconds = Number(eventCardElement.getAttribute("data-d4-progress-end"));
+        if (Number.isNaN(endTimeMilliseconds) || endTimeMilliseconds <= startTimeMilliseconds) {
+            progressElement.classList.remove("d4-event-progress-visible");
+            progressFillElement.style.width = "0%";
+            return;
+        }
+
+        const isRunning = now >= startTimeMilliseconds && now <= endTimeMilliseconds;
+        progressElement.classList.toggle("d4-event-progress-visible", isRunning);
+
+        if (!isRunning) {
+            progressFillElement.style.width = "0%";
+            return;
+        }
+
+        const elapsedMilliseconds = now - startTimeMilliseconds;
+        const totalMilliseconds = endTimeMilliseconds - startTimeMilliseconds;
+        const progress = clamp(elapsedMilliseconds / totalMilliseconds, 0, 1) * 100;
+        progressFillElement.style.width = `${progress.toFixed(2)}%`;
+    }
+
     function updateTimerText(container) {
         const now = Date.now();
         const timerElements = container.querySelectorAll("[data-d4-start-time]");
@@ -83,6 +119,7 @@ window.gameTools.diablo4EventTimers = (function() {
             const eventCardElement = timerElement.closest(".d4-event-card");
             if (eventCardElement) {
                 eventCardElement.classList.toggle("d4-event-card-soon", millisecondsRemaining <= 600000);
+                updateProgressBar(eventCardElement, now, startTimeMilliseconds);
 
                 const notificationButtonElement = eventCardElement.querySelector(".d4-notification-button");
                 if (notificationButtonElement) {
