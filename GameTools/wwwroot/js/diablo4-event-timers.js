@@ -107,16 +107,25 @@ window.gameTools.diablo4EventTimers = (function() {
             const startTime = new Date(startTimeMilliseconds);
             const isRunning = millisecondsRemaining <= 0;
             const elapsedMilliseconds = now - startTimeMilliseconds;
+            const eventCardElement = timerElement.closest(".d4-event-card");
+            const endTimeMilliseconds = eventCardElement
+                ? Number(eventCardElement.getAttribute("data-d4-progress-end"))
+                : Number.NaN;
+            const hasValidEndTime = !Number.isNaN(endTimeMilliseconds) && endTimeMilliseconds > startTimeMilliseconds;
 
             if (isRunning) {
                 const dots = getRunningDots(now);
-                timerElement.textContent = `Started ${localTimeFormatter.format(startTime)}, running for ${formatRemaining(elapsedMilliseconds)}${dots}`;
+                if (hasValidEndTime) {
+                    const millisecondsUntilEnd = Math.max(0, endTimeMilliseconds - now);
+                    timerElement.textContent = `Started ${localTimeFormatter.format(startTime)}, ends in ${formatRemaining(millisecondsUntilEnd)}${dots}`;
+                } else {
+                    timerElement.textContent = `Started ${localTimeFormatter.format(startTime)}, running for ${formatRemaining(elapsedMilliseconds)}${dots}`;
+                }
             } else {
                 timerElement.textContent = `Starts at ${localTimeFormatter.format(startTime)}, in ${formatRemaining(millisecondsRemaining)}`;
             }
             timerElement.title = localDateTimeFormatter.format(new Date(startTimeMilliseconds));
 
-            const eventCardElement = timerElement.closest(".d4-event-card");
             if (eventCardElement) {
                 eventCardElement.classList.toggle("d4-event-card-soon", millisecondsRemaining <= 600000);
                 updateProgressBar(eventCardElement, now, startTimeMilliseconds);
