@@ -32,7 +32,7 @@ public partial class Diablo4EventTimers : IAsyncDisposable
     private readonly TimeSpan _refreshGracePeriod = TimeSpan.FromSeconds(5);
     private readonly TimeSpan _refreshCheckInterval = TimeSpan.FromSeconds(1);
     private readonly TimeSpan _notificationEnableCutoff = TimeSpan.FromMinutes(5);
-    private readonly TimeSpan _helltideLingerDuration = TimeSpan.FromMinutes(45);
+    private readonly TimeSpan _helltideLingerDuration = TimeSpan.FromMinutes(55);
     private readonly TimeSpan _legionLingerDuration = TimeSpan.FromMinutes(5);
     private readonly TimeSpan _worldBossLingerDuration = TimeSpan.FromMinutes(5);
 
