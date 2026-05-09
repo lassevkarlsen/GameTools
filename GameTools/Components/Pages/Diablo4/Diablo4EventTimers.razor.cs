@@ -1,6 +1,10 @@
 ﻿using GameTools.Components.Pages.Diablo4.Models;
 using GameTools.Components.Pages.Enshrouded;
 using GameTools.Database;
+using GameTools.Workers.Events;
+
+using LVK.Events;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 
@@ -9,6 +13,7 @@ namespace GameTools.Components.Pages.Diablo4;
 public partial class Diablo4EventTimers : IAsyncDisposable
 {
     private readonly IDbContextFactory<GameToolsDbContext> _dbContextFactory;
+    private readonly IEventBus _eventBus;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IJSRuntime _jsRuntime;
     private readonly Lock _refreshLock = new();
@@ -26,9 +31,11 @@ public partial class Diablo4EventTimers : IAsyncDisposable
     private CancellationTokenSource? _refreshLoopCancellationTokenSource;
     private Task? _refreshLoopTask;
 
-    public Diablo4EventTimers(IDbContextFactory<GameToolsDbContext> dbContextFactory, IHttpClientFactory httpClientFactory, IJSRuntime jsRuntime)
+    public Diablo4EventTimers(IDbContextFactory<GameToolsDbContext> dbContextFactory, IEventBus eventBus,
+            IHttpClientFactory httpClientFactory, IJSRuntime jsRuntime)
     {
         _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException(nameof(dbContextFactory));
+        _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
         _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
         _jsRuntime = jsRuntime ?? throw new ArgumentNullException(nameof(jsRuntime));
     }
@@ -203,6 +210,11 @@ public partial class Diablo4EventTimers : IAsyncDisposable
                 _notifications.Add(notification);
             }
         }
+
+        await _eventBus.PublishAsync(new Diablo4EventNotificationsUpdatedEvent
+        {
+            ProfileId = ProfileId.Value,
+        });
 
         await InvokeAsync(StateHasChanged);
     }

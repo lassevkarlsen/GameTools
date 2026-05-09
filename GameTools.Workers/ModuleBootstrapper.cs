@@ -1,4 +1,5 @@
-﻿using GameTools.Workers.TimerNotifications;
+﻿using GameTools.Workers.Diablo4;
+using GameTools.Workers.TimerNotifications;
 
 using LVK.Bootstrapping;
 
@@ -12,7 +13,8 @@ public class ModuleBootstrapper : IModuleBootstrapper
     public void Bootstrap(IHostApplicationBuilder builder)
     {
         builder.Bootstrap(new LVK.Events.ModuleBootstrapper());
-        
+
         builder.Services.AddHostedService<TimerNotificationsWorker>();
+        builder.Services.AddHostedService<Diablo4EventNotificationsWorker>();
     }
 }
