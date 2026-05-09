@@ -12,10 +12,15 @@ namespace GameTools.Components.Pages.Diablo4;
 
 public partial class Diablo4EventTimers : IAsyncDisposable
 {
+    private const string ShowLegionPreferenceKey = "d4-eventtimers-show-legion";
+    private const string ShowHelltidesPreferenceKey = "d4-eventtimers-show-helltides";
+    private const string ShowWorldBossesPreferenceKey = "d4-eventtimers-show-worldbosses";
+
     private readonly IDbContextFactory<GameToolsDbContext> _dbContextFactory;
     private readonly IEventBus _eventBus;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IJSRuntime _jsRuntime;
+    private readonly IProfilePreferences _profilePreferences;
     private readonly Lock _refreshLock = new();
 
     private readonly List<Diablo4Event> _events = [];
@@ -28,28 +33,89 @@ public partial class Diablo4EventTimers : IAsyncDisposable
     private bool _refreshLoopStarted;
     private bool _isDisposed;
     private bool _refreshInProgress;
+    private bool _showLegionEvents = true;
+    private bool _showHelltides = true;
+    private bool _showWorldBosses = true;
     private CancellationTokenSource? _refreshLoopCancellationTokenSource;
     private Task? _refreshLoopTask;
 
     public Diablo4EventTimers(IDbContextFactory<GameToolsDbContext> dbContextFactory, IEventBus eventBus,
-            IHttpClientFactory httpClientFactory, IJSRuntime jsRuntime)
+            IHttpClientFactory httpClientFactory, IJSRuntime jsRuntime, IProfilePreferences profilePreferences)
     {
         _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException(nameof(dbContextFactory));
         _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
         _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
         _jsRuntime = jsRuntime ?? throw new ArgumentNullException(nameof(jsRuntime));
+        _profilePreferences = profilePreferences ?? throw new ArgumentNullException(nameof(profilePreferences));
     }
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        SetPageTitle?.Invoke("Diablo 4 :: Event Timers");
-
+        await LoadEventTypePreferencesAsync();
         await RefreshTimersAsync();
         await LoadProfileAsync();
         await LoadNotificationsAsync();
         StartRefreshLoop();
+
+        SetPageTitle?.Invoke("Diablo 4 :: Event Timers");
+    }
+
+    private async Task LoadEventTypePreferencesAsync()
+    {
+        if (ProfileId is null)
+        {
+            return;
+        }
+
+        _showLegionEvents = await LoadEventTypePreferenceAsync(ShowLegionPreferenceKey);
+        _showHelltides = await LoadEventTypePreferenceAsync(ShowHelltidesPreferenceKey);
+        _showWorldBosses = await LoadEventTypePreferenceAsync(ShowWorldBossesPreferenceKey);
+    }
+
+    private async Task<bool> LoadEventTypePreferenceAsync(string key)
+    {
+        if (ProfileId is null)
+        {
+            return true;
+        }
+
+        string value = await _profilePreferences.GetPreference(ProfileId.Value, key);
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return true;
+        }
+
+        return bool.TryParse(value, out bool parsedValue) ? parsedValue : true;
+    }
+
+    private async Task OnShowLegionEventsChanged(bool value)
+    {
+        _showLegionEvents = value;
+        await PersistEventTypePreferenceAsync(ShowLegionPreferenceKey, value);
+    }
+
+    private async Task OnShowHelltidesChanged(bool value)
+    {
+        _showHelltides = value;
+        await PersistEventTypePreferenceAsync(ShowHelltidesPreferenceKey, value);
+    }
+
+    private async Task OnShowWorldBossesChanged(bool value)
+    {
+        _showWorldBosses = value;
+        await PersistEventTypePreferenceAsync(ShowWorldBossesPreferenceKey, value);
+    }
+
+    private async Task PersistEventTypePreferenceAsync(string key, bool value)
+    {
+        if (ProfileId is null)
+        {
+            return;
+        }
+
+        await _profilePreferences.SetPreference(ProfileId.Value, key, value.ToString());
     }
 
     private async Task LoadProfileAsync()

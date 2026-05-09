@@ -5,6 +5,23 @@
 
 <PageTitle>GameTools :: Diablo 4 :: Event Timers</PageTitle>
 
+<RadzenStack Orientation="Orientation.Horizontal" Wrap="FlexWrap.Wrap" Style="margin-bottom: 1rem;">
+    <div>
+        <RadzenCheckBox Name="chkShowLegionEvents" @bind-Value="@_showLegionEvents" Change="(bool b) => OnShowLegionEventsChanged(b)"/>
+        <RadzenLabel Text="Show legion events" Component="chkShowLegionEvents"/>
+    </div>
+
+    <div>
+        <RadzenCheckBox Name="chkShowHelltides" @bind-Value="@_showHelltides" Change="(bool b) => OnShowHelltidesChanged(b)"/>
+        <RadzenLabel Text="Show helltides" Component="chkShowHelltides"/>
+    </div>
+
+    <div>
+        <RadzenCheckBox Name="chkShowWorldBosses" @bind-Value="@_showWorldBosses" Change="(bool b) => OnShowWorldBossesChanged(b)"/>
+        <RadzenLabel Text="Show world bosses" Component="chkShowWorldBosses"/>
+    </div>
+</RadzenStack>
+
 @if (_events.Count > 0)
 {
     <div id="d4-event-timers" class="d4-event-card-container">
@@ -16,6 +33,11 @@
             }
 
             if (evt is Diablo4Helltide helltide) {
+                if (!_showHelltides)
+                {
+                    continue;
+                }
+
                 string eventType = helltide.Type;
                 string eventId = helltide.Id.ToString();
                 bool hasNotification = HasNotification(eventType, eventId, helltide.StartTime);
@@ -41,6 +63,11 @@
                 </div>
             }
             else if (evt is Diablo4Legion legion) {
+                if (!_showLegionEvents)
+                {
+                    continue;
+                }
+
                 string eventType = legion.Type;
                 string eventId = legion.Id.ToString();
                 bool hasNotification = HasNotification(eventType, eventId, legion.StartTime);
@@ -67,6 +94,11 @@
             }
             else if (evt is Diablo4WorldBoss worldBoss)
             {
+                if (!_showWorldBosses)
+                {
+                    continue;
+                }
+
                 if (worldBoss.Zones.Count == 0)
                 {
                     string eventType = worldBoss.Type;
