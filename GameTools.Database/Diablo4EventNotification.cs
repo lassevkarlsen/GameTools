@@ -14,13 +14,10 @@ public class Diablo4EventNotification
     public Profile? Profile { get; set; }
 
     [Required]
-    public required string Type { get; set; }
+    [MaxLength(32)]
+    public required string Key { get; set; }
 
-    [Required]
-    public required string EventId { get; set; }
-
-    [Required]
-    [MaxLength(100)]
+    [MaxLength(32)]
     public required string EventText { get; set; }
 
     public DateTimeOffset OccursAt { get; set; }

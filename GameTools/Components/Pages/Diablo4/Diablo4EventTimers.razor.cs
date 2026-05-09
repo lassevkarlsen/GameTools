@@ -1,5 +1,4 @@
 ﻿using GameTools.Components.Pages.Diablo4.Models;
-using GameTools.Components.Pages.Enshrouded;
 using GameTools.Database;
 using GameTools.Workers.Events;
 
@@ -12,34 +11,28 @@ namespace GameTools.Components.Pages.Diablo4;
 
 public partial class Diablo4EventTimers : IAsyncDisposable
 {
-    protected override string? LandingPageValue => GameTools.Components.Pages.LandingPageConstants.Values.Diablo4EventTimers;
+    protected override string LandingPageValue => LandingPageConstants.Values.Diablo4EventTimers;
 
-    private const string ShowLegionPreferenceKey = "d4-eventtimers-show-legion";
-    private const string ShowHelltidesPreferenceKey = "d4-eventtimers-show-helltides";
-    private const string ShowWorldBossesPreferenceKey = "d4-eventtimers-show-worldbosses";
+    private const string _showLegionPreferenceKey = "d4-eventtimers-show-legion";
+    private const string _showHelltidesPreferenceKey = "d4-eventtimers-show-helltides";
+    private const string _showWorldBossesPreferenceKey = "d4-eventtimers-show-worldbosses";
 
     private readonly IDbContextFactory<GameToolsDbContext> _dbContextFactory;
     private readonly IEventBus _eventBus;
-    private readonly IHttpClientFactory _httpClientFactory;
     private readonly IJSRuntime _jsRuntime;
     private readonly IProfilePreferences _profilePreferences;
     private readonly Lock _refreshLock = new();
 
     private readonly List<Diablo4Event> _events = [];
-    private readonly List<Diablo4Event> _fullSchedule = [];
     private readonly List<Diablo4EventNotification> _notifications = [];
     private Profile? _profile;
     private readonly TimeSpan _refreshGracePeriod = TimeSpan.FromSeconds(5);
     private readonly TimeSpan _refreshCheckInterval = TimeSpan.FromSeconds(1);
     private readonly TimeSpan _notificationEnableCutoff = TimeSpan.FromMinutes(5);
-    private readonly TimeSpan _helltideLingerDuration = TimeSpan.FromMinutes(55);
-    private readonly TimeSpan _legionLingerDuration = TimeSpan.FromMinutes(5);
-    private readonly TimeSpan _worldBossLingerDuration = TimeSpan.FromMinutes(5);
 
     private bool _countdownStarted;
     private bool _refreshLoopStarted;
     private bool _isDisposed;
-    private bool _refreshInProgress;
     private bool _showLegionEvents = true;
     private bool _showHelltides = true;
     private bool _showWorldBosses = true;
@@ -47,11 +40,10 @@ public partial class Diablo4EventTimers : IAsyncDisposable
     private Task? _refreshLoopTask;
 
     public Diablo4EventTimers(IDbContextFactory<GameToolsDbContext> dbContextFactory, IEventBus eventBus,
-            IHttpClientFactory httpClientFactory, IJSRuntime jsRuntime, IProfilePreferences profilePreferences)
+            IJSRuntime jsRuntime, IProfilePreferences profilePreferences)
     {
         _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException(nameof(dbContextFactory));
         _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-        _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
         _jsRuntime = jsRuntime ?? throw new ArgumentNullException(nameof(jsRuntime));
         _profilePreferences = profilePreferences ?? throw new ArgumentNullException(nameof(profilePreferences));
     }
@@ -61,8 +53,7 @@ public partial class Diablo4EventTimers : IAsyncDisposable
         await base.OnInitializedAsync();
 
         await LoadEventTypePreferencesAsync();
-        await RefreshScheduleAsync();
-        await FilterEventsAsync();
+        RefreshSchedule();
         await LoadProfileAsync();
         await LoadNotificationsAsync();
         StartRefreshLoop();
@@ -77,9 +68,9 @@ public partial class Diablo4EventTimers : IAsyncDisposable
             return;
         }
 
-        _showLegionEvents = await LoadEventTypePreferenceAsync(ShowLegionPreferenceKey);
-        _showHelltides = await LoadEventTypePreferenceAsync(ShowHelltidesPreferenceKey);
-        _showWorldBosses = await LoadEventTypePreferenceAsync(ShowWorldBossesPreferenceKey);
+        _showLegionEvents = await LoadEventTypePreferenceAsync(_showLegionPreferenceKey);
+        _showHelltides = await LoadEventTypePreferenceAsync(_showHelltidesPreferenceKey);
+        _showWorldBosses = await LoadEventTypePreferenceAsync(_showWorldBossesPreferenceKey);
     }
 
     private async Task<bool> LoadEventTypePreferenceAsync(string key)
@@ -101,22 +92,22 @@ public partial class Diablo4EventTimers : IAsyncDisposable
     private async Task OnShowLegionEventsChanged(bool value)
     {
         _showLegionEvents = value;
-        await PersistEventTypePreferenceAsync(ShowLegionPreferenceKey, value);
-        await FilterEventsAsync();
+        await PersistEventTypePreferenceAsync(_showLegionPreferenceKey, value);
+        StateHasChanged();
     }
 
     private async Task OnShowHelltidesChanged(bool value)
     {
         _showHelltides = value;
-        await PersistEventTypePreferenceAsync(ShowHelltidesPreferenceKey, value);
-        await FilterEventsAsync();
+        await PersistEventTypePreferenceAsync(_showHelltidesPreferenceKey, value);
+        StateHasChanged();
     }
 
     private async Task OnShowWorldBossesChanged(bool value)
     {
         _showWorldBosses = value;
-        await PersistEventTypePreferenceAsync(ShowWorldBossesPreferenceKey, value);
-        await FilterEventsAsync();
+        await PersistEventTypePreferenceAsync(_showWorldBossesPreferenceKey, value);
+        StateHasChanged();
     }
 
     private async Task PersistEventTypePreferenceAsync(string key, bool value)
@@ -179,127 +170,49 @@ public partial class Diablo4EventTimers : IAsyncDisposable
         }
     }
 
-    private async Task FilterEventsAsync()
+    private void RefreshSchedule()
     {
+        List<Diablo4Event> schedule = [
+            ..GeneratePeriodicEvents(Diablo4EventType.Helltide, new DateTimeOffset(2026, 05, 09, 12, 0, 0, TimeSpan.Zero), 60, TimeSpan.FromMinutes(55)),
+            ..GeneratePeriodicEvents(Diablo4EventType.Legion, new DateTimeOffset(2026, 05, 09, 14, 0, 0, TimeSpan.Zero), 25, TimeSpan.FromMinutes(10)),
+            ..GeneratePeriodicEvents(Diablo4EventType.WorldBoss, new DateTimeOffset(2026, 05, 09, 14, 30, 0, TimeSpan.Zero), 210, TimeSpan.FromMinutes(2)),
+        ];
+
+        schedule = schedule.Where(evt => evt.EndTime >= DateTimeOffset.UtcNow)
+           .OrderBy(evt => evt.StartTime)
+           .ToList();
+
         lock (_refreshLock)
         {
-            if (_refreshInProgress || _isDisposed)
-            {
-                return;
-            }
-
-            _refreshInProgress = true;
-        }
-
-        try
-        {
-            List<Diablo4Event> refreshedEvents = GetFilteredEvents();
-
-            lock (_refreshLock)
-            {
-                _events.Clear();
-                _events.AddRange(refreshedEvents);
-            }
-
-            await InvokeAsync(StateHasChanged);
-        }
-        finally
-        {
-            lock (_refreshLock)
-            {
-                _refreshInProgress = false;
-            }
+            _events.Clear();
+            _events.AddRange(schedule);
         }
     }
 
-    private async Task RefreshScheduleAsync()
+    private IEnumerable<Diablo4Event> GeneratePeriodicEvents(Diablo4EventType type, DateTimeOffset fixedStart, int minutesBetween, TimeSpan duration)
     {
-        using HttpClient client = _httpClientFactory.CreateClient("Diablo4");
-        Diablo4Schedule? schedule = await client.GetFromJsonAsync<Diablo4Schedule>("https://helltides.com/api/schedule");
-
-        List<Diablo4Event> refreshedSchedule = [];
         DateTimeOffset now = DateTimeOffset.UtcNow;
-        if (schedule is not null)
+        int cyclesSinceFixed = ((int)(now - fixedStart).TotalMinutes / minutesBetween) - 1;
+        DateTimeOffset start = fixedStart.AddMinutes(cyclesSinceFixed * minutesBetween);
+
+        DateTimeOffset cutoff = now.AddHours(24);
+
+        while (start <= cutoff)
         {
-            refreshedSchedule.AddRange(schedule.WorldBosses.Where(evt => IsWithinDisplayWindow(evt, now)));
-            refreshedSchedule.AddRange(schedule.LegionEvents.Where(evt => IsWithinDisplayWindow(evt, now)));
-            refreshedSchedule.AddRange(schedule.Helltides.Where(evt => IsWithinDisplayWindow(evt, now)));
-            refreshedSchedule.Sort((a, b) => a.Timestamp.CompareTo(b.Timestamp));
+            var evt = new Diablo4Event
+            {
+                StartTime = start,
+                EndTime = start + duration,
+                Type = type,
+            };
+
+            if (now < evt.EndTime)
+            {
+                yield return evt;
+            }
+
+            start = start.AddMinutes(minutesBetween);
         }
-
-        lock (_refreshLock)
-        {
-            _fullSchedule.Clear();
-            _fullSchedule.AddRange(refreshedSchedule);
-        }
-    }
-
-    private List<Diablo4Event> GetFilteredEvents()
-    {
-        int enabledEventTypeCount = GetEnabledEventTypeCount();
-        DateTimeOffset now = DateTimeOffset.UtcNow;
-
-        List<Diablo4Event> filteredEvents;
-        lock (_refreshLock)
-        {
-            filteredEvents = [];
-            filteredEvents.AddRange(_fullSchedule.OfType<Diablo4WorldBoss>()
-                .Where(evt => IsWithinDisplayWindow(evt, now))
-                .OrderBy(ev => ev.Timestamp)
-                .Take(GetPerTypeTakeCount(_showWorldBosses, enabledEventTypeCount)));
-            filteredEvents.AddRange(_fullSchedule.OfType<Diablo4Legion>()
-                .Where(evt => IsWithinDisplayWindow(evt, now))
-                .OrderBy(ev => ev.Timestamp)
-                .Take(GetPerTypeTakeCount(_showLegionEvents, enabledEventTypeCount)));
-            filteredEvents.AddRange(_fullSchedule.OfType<Diablo4Helltide>()
-                .Where(evt => IsWithinDisplayWindow(evt, now))
-                .OrderBy(ev => ev.Timestamp)
-                .Take(GetPerTypeTakeCount(_showHelltides, enabledEventTypeCount)));
-        }
-
-        filteredEvents.Sort((a, b) => a.Timestamp.CompareTo(b.Timestamp));
-
-        DateTimeOffset cutoff = DateTimeOffset.UtcNow.AddHours(12);
-        filteredEvents.RemoveAll(ev => ev.StartTime >= cutoff);
-
-        return filteredEvents;
-    }
-
-    private int GetEnabledEventTypeCount()
-    {
-        int enabledEventTypeCount = 0;
-
-        if (_showLegionEvents)
-        {
-            enabledEventTypeCount++;
-        }
-
-        if (_showHelltides)
-        {
-            enabledEventTypeCount++;
-        }
-
-        if (_showWorldBosses)
-        {
-            enabledEventTypeCount++;
-        }
-
-        return enabledEventTypeCount;
-    }
-
-    private static int GetPerTypeTakeCount(bool showEventType, int enabledEventTypeCount)
-    {
-        if (!showEventType)
-        {
-            return 0;
-        }
-
-        return enabledEventTypeCount switch
-        {
-            1 => 6,
-            2 => 3,
-            _ => 2,
-        };
     }
 
     private bool IsWithinDisplayWindow(Diablo4Event evt)
@@ -314,29 +227,13 @@ public partial class Diablo4EventTimers : IAsyncDisposable
             return true;
         }
 
-        return evt.StartTime.Add(GetLingerDuration(evt)) > now;
-    }
-
-    private bool IsLingeringEvent(Diablo4Event evt)
-    {
-        DateTimeOffset now = DateTimeOffset.UtcNow;
-        return evt.StartTime < now && evt.StartTime.Add(GetLingerDuration(evt)) > now;
-    }
-
-    private TimeSpan GetLingerDuration(Diablo4Event evt)
-    {
-        return evt switch
-        {
-            Diablo4Helltide => _helltideLingerDuration,
-            Diablo4Legion => _legionLingerDuration,
-            Diablo4WorldBoss => _worldBossLingerDuration,
-            _ => TimeSpan.Zero,
-        };
+        return evt.EndTime > now;
     }
 
     private string GetEventCardClass(Diablo4Event evt)
     {
-        return IsLingeringEvent(evt)
+        var now = DateTimeOffset.UtcNow;
+        return now >= evt.StartTime && now < evt.EndTime
             ? "d4-event-card d4-event-card-lingering"
             : "d4-event-card";
     }
@@ -344,18 +241,15 @@ public partial class Diablo4EventTimers : IAsyncDisposable
     private bool ShouldShowNotificationToggle =>
         !string.IsNullOrWhiteSpace(_profile?.PushoverUserKey);
 
-    private bool HasNotification(string eventType, string eventId, DateTimeOffset occursAt)
+    private bool HasNotification(string eventKey)
     {
         lock (_refreshLock)
         {
-            return _notifications.Any(notification =>
-                notification.Type == eventType &&
-                notification.EventId == eventId &&
-                notification.OccursAt == occursAt);
+            return _notifications.Any(notification => notification.Key == eventKey);
         }
     }
 
-    private async Task ToggleNotificationAsync(string eventType, string eventId, string eventText, DateTimeOffset occursAt)
+    private async Task ToggleNotificationAsync(Diablo4EventType type, string key, DateTimeOffset occursAt)
     {
         if (ProfileId is null || !ShouldShowNotificationToggle)
         {
@@ -366,9 +260,7 @@ public partial class Diablo4EventTimers : IAsyncDisposable
 
         List<Diablo4EventNotification> existingNotifications = await dbContext.Diablo4EventNotifications
             .Where(notification => notification.ProfileId == ProfileId.Value
-                                   && notification.Type == eventType
-                                   && notification.EventId == eventId
-                                   && notification.OccursAt == occursAt)
+                                   && notification.Key == key)
             .ToListAsync();
 
         if (existingNotifications.Count > 0)
@@ -378,10 +270,7 @@ public partial class Diablo4EventTimers : IAsyncDisposable
 
             lock (_refreshLock)
             {
-                _notifications.RemoveAll(notification =>
-                    notification.Type == eventType &&
-                    notification.EventId == eventId &&
-                    notification.OccursAt == occursAt);
+                _notifications.RemoveAll(notification => notification.Key == key);
             }
         }
         else
@@ -394,9 +283,14 @@ public partial class Diablo4EventTimers : IAsyncDisposable
             var notification = new Diablo4EventNotification
             {
                 ProfileId = ProfileId.Value,
-                Type = eventType,
-                EventId = eventId,
-                EventText = eventText,
+                Key = key,
+                EventText = type switch
+                {
+                    Diablo4EventType.Helltide  => "Helltide",
+                    Diablo4EventType.Legion    => "Legion",
+                    Diablo4EventType.WorldBoss => "World Boss",
+                    _                          => throw new ArgumentOutOfRangeException(nameof(type), type, null),
+                },
                 OccursAt = occursAt,
             };
 
@@ -444,13 +338,13 @@ public partial class Diablo4EventTimers : IAsyncDisposable
             bool shouldRefresh;
             lock (_refreshLock)
             {
-                shouldRefresh = _events.Any(evt => evt.StartTime.Add(GetLingerDuration(evt)) <= refreshThreshold);
+                shouldRefresh = _events.Any(evt => evt.EndTime <= refreshThreshold);
             }
 
             if (shouldRefresh)
             {
-                await RefreshScheduleAsync();
-                await FilterEventsAsync();
+                RefreshSchedule();
+                await InvokeAsync(StateHasChanged);
             }
         }
     }

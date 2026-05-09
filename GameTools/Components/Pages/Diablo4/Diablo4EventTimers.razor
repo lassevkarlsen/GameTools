@@ -1,4 +1,6 @@
 ﻿@using GameTools.Components.Pages.Diablo4.Models
+@using Microsoft.AspNetCore.Components.RenderTree
+@using Microsoft.AspNetCore.Mvc.Formatters
 @inherits BasePage
 
 @page "/{profileIdString}/diablo4/eventtimers"
@@ -24,46 +26,61 @@
 
 @if (_events.Count > 0)
 {
-    <div id="d4-event-timers" class="d4-event-card-container">
-        @foreach (Diablo4Event evt in _events)
-        {
-            if (!IsWithinDisplayWindow(evt))
+    int filtersEnabled = (_showHelltides ? 1 : 0) + (_showLegionEvents ? 1 : 0) + (_showWorldBosses ? 1 : 0);
+    if (filtersEnabled > 0)
+    {
+        int helltidesLeftToDisplay = 6 / filtersEnabled;
+        int legionLeftToDisplay = helltidesLeftToDisplay;
+        int worldBossesLeftToDisplay = helltidesLeftToDisplay;
+
+        <div id="d4-event-timers" class="d4-event-card-container">
+            @foreach (Diablo4Event evt in _events)
             {
-                continue;
-            }
-
-            string cardClass = GetEventCardClass(evt);
-
-            if (evt is Diablo4Helltide helltide) {
-                if (!_showHelltides)
+                if (!IsWithinDisplayWindow(evt))
                 {
                     continue;
                 }
 
-                string eventType = helltide.Type;
-                string eventId = helltide.Id.ToString();
-                bool hasNotification = HasNotification(eventType, eventId, helltide.StartTime);
+                string cardClass = GetEventCardClass(evt);
+
+                bool showEvent = evt.Type switch
+                {
+                    Diablo4EventType.Helltide  => _showHelltides && --helltidesLeftToDisplay >= 0,
+                    Diablo4EventType.Legion    => _showLegionEvents && --legionLeftToDisplay >= 0,
+                    Diablo4EventType.WorldBoss => _showWorldBosses && --worldBossesLeftToDisplay >= 0,
+                    _                          => false,
+                };
+
+                if (!showEvent)
+                {
+                    continue;
+                }
+
+                bool hasNotification = HasNotification(evt.Key);
 
                 <div class="@cardClass"
-                     data-d4-progress-start="@helltide.StartTime.ToUnixTimeMilliseconds()"
-                     data-d4-progress-end="@helltide.StartTime.Add(GetLingerDuration(helltide)).ToUnixTimeMilliseconds()"
-                     @onclick='() => ToggleNotificationAsync(eventType, eventId, "Helltide", helltide.StartTime)'>
+                     data-d4-progress-start="@evt.StartTime.ToUnixTimeMilliseconds()"
+                     data-d4-progress-end="@evt.EndTime.ToUnixTimeMilliseconds()"
+                     @onclick='() => ToggleNotificationAsync(evt.Type, evt.Key, evt.StartTime)'>
                     <div class="d4-event-body">
                         <div class="d4-event-icon d4-event-icon-helltide" aria-hidden="true">⛧</div>
                         <div class="d4-event-content">
                             <div class="d4-event-card-header">
-                                <div>Helltide</div>
+                                <div>@evt.DisplayTitle</div>
                                 @if (ShouldShowNotificationToggle)
                                 {
-                                    <button class="d4-notification-button @(hasNotification ? "d4-notification-button-on" : "d4-notification-button-off")"
-                                            type="button"
-                                            @onclick:stopPropagation="true"
-                                            @onclick='() => ToggleNotificationAsync(eventType, eventId, "Helltide", helltide.StartTime)'>
-                                        <RadzenIcon Icon="@(hasNotification ? "notifications_active" : "notifications")" />
+                                    <button
+                                        class="d4-notification-button @(hasNotification ? "d4-notification-button-on" : "d4-notification-button-off")"
+                                        type="button"
+                                        @onclick:stopPropagation="true"
+                                        @onclick='() => ToggleNotificationAsync(evt.Type, evt.Key, evt.StartTime)'>
+                                        <RadzenIcon
+                                            Icon="@(hasNotification ? "notifications_active" : "notifications")"/>
                                     </button>
                                 }
                             </div>
-                            <div class="d4-event-time" data-d4-start-time="@helltide.StartTime.ToUnixTimeMilliseconds()">@helltide.StartTime.LocalDateTime.ToString("g")</div>
+                            <div class="d4-event-time"
+                                 data-d4-start-time="@evt.StartTime.ToUnixTimeMilliseconds()">@evt.StartTime.LocalDateTime.ToString("g")</div>
                         </div>
                     </div>
                     <div class="d4-event-progress" aria-hidden="true">
@@ -71,126 +88,8 @@
                     </div>
                 </div>
             }
-            else if (evt is Diablo4Legion legion) {
-                if (!_showLegionEvents)
-                {
-                    continue;
-                }
-
-                string eventType = legion.Type;
-                string eventId = legion.Id.ToString();
-                bool hasNotification = HasNotification(eventType, eventId, legion.StartTime);
-
-                <div class="@cardClass"
-                     data-d4-progress-start="@legion.StartTime.ToUnixTimeMilliseconds()"
-                     data-d4-progress-end="@legion.StartTime.Add(GetLingerDuration(legion)).ToUnixTimeMilliseconds()"
-                     @onclick='() => ToggleNotificationAsync(eventType, eventId, "Legion event", legion.StartTime)'>
-                    <div class="d4-event-body">
-                        <div class="d4-event-icon d4-event-icon-legion" aria-hidden="true">👣</div>
-                        <div class="d4-event-content">
-                            <div class="d4-event-card-header">
-                                <div>Legion event</div>
-                                @if (ShouldShowNotificationToggle)
-                                {
-                                    <button class="d4-notification-button @(hasNotification ? "d4-notification-button-on" : "d4-notification-button-off")"
-                                            type="button"
-                                            @onclick:stopPropagation="true"
-                                            @onclick='() => ToggleNotificationAsync(eventType, eventId, "Legion event", legion.StartTime)'>
-                                        <RadzenIcon Icon="@(hasNotification ? "notifications_active" : "notifications")" />
-                                    </button>
-                                }
-                            </div>
-                            <div class="d4-event-time" data-d4-start-time="@legion.StartTime.ToUnixTimeMilliseconds()">@legion.StartTime.LocalDateTime.ToString("g")</div>
-                        </div>
-                    </div>
-                    <div class="d4-event-progress" aria-hidden="true">
-                        <div class="d4-event-progress-fill"></div>
-                    </div>
-                </div>
-            }
-            else if (evt is Diablo4WorldBoss worldBoss)
-            {
-                if (!_showWorldBosses)
-                {
-                    continue;
-                }
-
-                // if (worldBoss.Zones.Count == 0)
-                // {
-                    string eventType = worldBoss.Type;
-                    string eventId = worldBoss.Id.ToString();
-                    bool hasNotification = HasNotification(eventType, eventId, worldBoss.StartTime);
-
-                    <div class="@cardClass"
-                         data-d4-progress-start="@worldBoss.StartTime.ToUnixTimeMilliseconds()"
-                         data-d4-progress-end="@worldBoss.StartTime.Add(GetLingerDuration(worldBoss)).ToUnixTimeMilliseconds()"
-                         @onclick='() => ToggleNotificationAsync(eventType, eventId, $"World boss", worldBoss.StartTime)'>
-                        @* @onclick='() => ToggleNotificationAsync(eventType, eventId, $"World boss {worldBoss.Name}", worldBoss.StartTime)'> *@
-                        <div class="d4-event-body">
-                            <div class="d4-event-icon d4-event-icon-worldboss" aria-hidden="true">👤</div>
-                            <div class="d4-event-content">
-                                <div class="d4-event-card-header">
-                                    @* <div>@worldBoss.Name</div> *@
-                                    <div>World boss</div>
-                                    @if (ShouldShowNotificationToggle)
-                                    {
-                                        <button class="d4-notification-button @(hasNotification ? "d4-notification-button-on" : "d4-notification-button-off")"
-                                                type="button"
-                                                @onclick:stopPropagation="true"
-                                                @onclick='() => ToggleNotificationAsync(eventType, eventId, $"World boss {worldBoss.Name}", worldBoss.StartTime)'>
-                                            <RadzenIcon Icon="@(hasNotification ? "notifications_active" : "notifications")" />
-                                        </button>
-                                    }
-                                </div>
-                                <div class="d4-event-time" data-d4-start-time="@worldBoss.StartTime.ToUnixTimeMilliseconds()">@worldBoss.StartTime.LocalDateTime.ToString("g")</div>
-                            </div>
-                        </div>
-                        <div class="d4-event-progress" aria-hidden="true">
-                            <div class="d4-event-progress-fill"></div>
-                        </div>
-                    </div>
-                @* } *@
-                @* else *@
-                @* { *@
-                @*     foreach (Diablo4Zone zone in worldBoss.Zones) *@
-                @*     { *@
-                @*         string zoneBossName = string.IsNullOrWhiteSpace(zone.Boss) ? worldBoss.Name : zone.Boss; *@
-                @*         string eventType = worldBoss.Type; *@
-                @*         string eventId = $"{worldBoss.Id}:{zone.Id}"; *@
-                @*         bool hasNotification = HasNotification(eventType, eventId, worldBoss.StartTime); *@
-                @* *@
-                @*         <div class="@cardClass" *@
-                @*              data-d4-progress-start="@worldBoss.StartTime.ToUnixTimeMilliseconds()" *@
-                @*              data-d4-progress-end="@worldBoss.StartTime.Add(GetLingerDuration(worldBoss)).ToUnixTimeMilliseconds()" *@
-                @*              @onclick='() => ToggleNotificationAsync(eventType, eventId, $"World boss {zoneBossName} in {zone.Name}", worldBoss.StartTime)'> *@
-                @*             <div class="d4-event-body"> *@
-                @*                 <div class="d4-event-icon d4-event-icon-worldboss" aria-hidden="true">👤</div> *@
-                @*                 <div class="d4-event-content"> *@
-                @*                     <div class="d4-event-card-header"> *@
-                @*                         <div>@zoneBossName</div> *@
-                @*                         @if (ShouldShowNotificationToggle) *@
-                @*                         { *@
-                @*                             <button class="d4-notification-button @(hasNotification ? "d4-notification-button-on" : "d4-notification-button-off")" *@
-                @*                                     type="button" *@
-                @*                                     @onclick:stopPropagation="true" *@
-                @*                                     @onclick='() => ToggleNotificationAsync(eventType, eventId, $"World boss {zoneBossName} in {zone.Name}", worldBoss.StartTime)'> *@
-                @*                                 <RadzenIcon Icon="@(hasNotification ? "notifications_active" : "notifications")" /> *@
-                @*                             </button> *@
-                @*                         } *@
-                @*                     </div> *@
-                @*                     <div class="d4-event-time" data-d4-start-time="@worldBoss.StartTime.ToUnixTimeMilliseconds()">@worldBoss.StartTime.LocalDateTime.ToString("g")</div> *@
-                @*                     <div class="d4-event-zone">Spawns in <a href="https://helltides.com/worldboss" target="_blank" rel="noopener noreferrer">@zone.Name</a></div> *@
-                @*                 </div> *@
-                @*             </div> *@
-                @*             <div class="d4-event-progress" aria-hidden="true"> *@
-                @*                 <div class="d4-event-progress-fill"></div> *@
-                @*             </div> *@
-                @*         </div> *@
-                @*     } *@
-                @* } *@
-            }
-        }
-    </div>
+        </div>
+    }
 }
 
 <div class="d4-powered-by">
