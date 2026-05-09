@@ -128,7 +128,15 @@ window.gameTools.diablo4EventTimers = (function() {
                     timerElement.textContent = `Started ${localTimeFormatter.format(startTime)}, running for ${formatRemaining(elapsedMilliseconds)}${dots}`;
                 }
             } else {
-                timerElement.textContent = `Starts ${localTimeFormatter.format(startTime)}, in ${formatRemaining(millisecondsRemaining)}`;
+                const formattedRemaining = formatRemaining(millisecondsRemaining);
+                const normalizedRemaining = formattedRemaining.startsWith("~")
+                    ? formattedRemaining.substring(1)
+                    : formattedRemaining;
+                const remainingWithApproximation = millisecondsRemaining >= 600000
+                    ? `~${normalizedRemaining}`
+                    : normalizedRemaining;
+
+                timerElement.textContent = `Starts ${localTimeFormatter.format(startTime)}, in ${remainingWithApproximation}`;
             }
             timerElement.title = localDateTimeFormatter.format(new Date(startTimeMilliseconds));
 
