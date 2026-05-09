@@ -58,8 +58,15 @@ window.gameTools.diablo4EventTimers = (function() {
                 continue;
             }
 
-            timerElement.textContent = `Starts at ${localTimeFormatter.format(new Date(startTimeMilliseconds))}, in ${formatRemaining(startTimeMilliseconds - now)}`;
+            const millisecondsRemaining = startTimeMilliseconds - now;
+
+            timerElement.textContent = `Starts at ${localTimeFormatter.format(new Date(startTimeMilliseconds))}, in ${formatRemaining(millisecondsRemaining)}`;
             timerElement.title = localDateTimeFormatter.format(new Date(startTimeMilliseconds));
+
+            const eventCardElement = timerElement.closest(".d4-event-card");
+            if (eventCardElement) {
+                eventCardElement.classList.toggle("d4-event-card-soon", millisecondsRemaining <= 600000);
+            }
         }
     }
 

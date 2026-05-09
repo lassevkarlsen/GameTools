@@ -16,6 +16,10 @@
   background: var(--rz-base-background-color);
 }
 
+.d4-event-card.d4-event-card-soon {
+  background: color-mix(in srgb, var(--rz-base-background-color) 80%, var(--rz-warning) 20%);
+}
+
 .d4-event-time {
   font-variant-numeric: tabular-nums;
 }
