@@ -29,6 +29,10 @@ window.gameTools.diablo4EventTimers = (function() {
             return `${days}d ${hours}h ${minutes}m`;
         }
 
+        if (hours >= 2) {
+            return `~${hours}h`;
+        }
+
         if (hours > 0) {
             if (totalSeconds >= 600) {
                 return `${hours}h ${minutes}m`;
