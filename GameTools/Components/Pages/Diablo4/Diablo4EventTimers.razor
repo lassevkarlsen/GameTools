@@ -70,7 +70,7 @@
                             {
                                 <button class="d4-notification-button @(hasNotification ? "d4-notification-button-on" : "d4-notification-button-off")"
                                         type="button"
-                                        @onclick="() => ToggleNotificationAsync(eventType, eventId, worldBoss.Name, worldBoss.StartTime)">
+                                        @onclick='() => ToggleNotificationAsync(eventType, eventId, $"World boss {worldBoss.Name}", worldBoss.StartTime)'>
                                     <RadzenIcon Icon="@(hasNotification ? "notifications_active" : "notifications")" />
                                 </button>
                             }
@@ -94,7 +94,7 @@
                                 {
                                     <button class="d4-notification-button @(hasNotification ? "d4-notification-button-on" : "d4-notification-button-off")"
                                             type="button"
-                                            @onclick="() => ToggleNotificationAsync(eventType, eventId, zoneBossName, worldBoss.StartTime)">
+                                            @onclick='() => ToggleNotificationAsync(eventType, eventId, $"World boss {zoneBossName} in {zone.Name}", worldBoss.StartTime)'>
                                         <RadzenIcon Icon="@(hasNotification ? "notifications_active" : "notifications")" />
                                     </button>
                                 }

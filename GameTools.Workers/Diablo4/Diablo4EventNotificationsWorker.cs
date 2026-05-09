@@ -112,7 +112,7 @@ public class Diablo4EventNotificationsWorker : BackgroundService
                 UrlTitle = "Open Diablo 4 event timers",
                 Priority = PushoverNotificationPriority.Normal,
                 TargetUser = profile.PushoverUserKey,
-                Title = "GameTools Diablo 4 event reminder",
+                Title = $"GameTools Diablo 4 {notification.EventText}",
             });
         }
         catch (HttpRequestException ex)
