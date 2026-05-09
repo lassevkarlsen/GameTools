@@ -66,6 +66,11 @@ window.gameTools.diablo4EventTimers = (function() {
             const eventCardElement = timerElement.closest(".d4-event-card");
             if (eventCardElement) {
                 eventCardElement.classList.toggle("d4-event-card-soon", millisecondsRemaining <= 600000);
+
+                const notificationButtonElement = eventCardElement.querySelector(".d4-notification-button");
+                if (notificationButtonElement) {
+                    notificationButtonElement.classList.toggle("d4-notification-button-hidden", millisecondsRemaining <= 300000);
+                }
             }
         }
     }

@@ -46,6 +46,10 @@
   cursor: pointer;
 }
 
+.d4-notification-button-hidden {
+  visibility: hidden;
+}
+
 .d4-notification-button-off {
   color: var(--rz-base-500);
 }
