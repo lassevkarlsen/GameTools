@@ -36,4 +36,5 @@ public class GameToolsDbContext : DbContext
     public DbSet<NoMansSkyGalaxy> NoMansSkyGalaxies { get; set; }
 
     public DbSet<Diablo4EventNotification> Diablo4EventNotifications { get; set; }
+    public DbSet<ProfilePreference> ProfilePreferences { get; set; }
 }

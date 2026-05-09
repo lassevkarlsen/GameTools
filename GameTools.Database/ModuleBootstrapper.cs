@@ -19,6 +19,8 @@ public class ModuleBootstrapper : IModuleBootstrapper
             options.UseNpgsql(connectionString, configure => configure.SetPostgresVersion(18, 0));
         });
 
+        builder.Services.AddScoped<IProfilePreferences, ProfilePreferences>();
+
         builder.Services.AddTransient<IModuleInitializer, ModuleInitializer>();
     }
 }
