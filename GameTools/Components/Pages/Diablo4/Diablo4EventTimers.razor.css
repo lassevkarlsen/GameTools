@@ -7,10 +7,10 @@
 
 .d4-live-clock {
   margin-left: auto;
-  margin-right: 1.75rem;
+  margin-right: 1.5rem;
   font-variant-numeric: tabular-nums;
   color: var(--rz-base-600);
-  font-size: 1.5rem;
+  font-size: 1.3rem;
 }
 
 .d4-event-card {
