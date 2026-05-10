@@ -36,6 +36,7 @@ public partial class Diablo4EventTimers : IAsyncDisposable
     private bool _showLegionEvents = true;
     private bool _showHelltides = true;
     private bool _showWorldBosses = true;
+    private DateTime _currentLocalTime = DateTime.Now;
     private CancellationTokenSource? _refreshLoopCancellationTokenSource;
     private Task? _refreshLoopTask;
     private IDisposable? _notificationsUpdatedSubscription;
@@ -354,6 +355,8 @@ public partial class Diablo4EventTimers : IAsyncDisposable
                 return;
             }
 
+            _currentLocalTime = DateTime.Now;
+
             DateTimeOffset refreshThreshold = DateTimeOffset.UtcNow - _refreshGracePeriod;
             bool shouldRefresh;
             lock (_refreshLock)
@@ -364,8 +367,9 @@ public partial class Diablo4EventTimers : IAsyncDisposable
             if (shouldRefresh)
             {
                 RefreshSchedule();
-                await InvokeAsync(StateHasChanged);
             }
+
+            await InvokeAsync(StateHasChanged);
         }
     }
 

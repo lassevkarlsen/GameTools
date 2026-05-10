@@ -5,6 +5,13 @@
   align-items: stretch;
 }
 
+.d4-live-clock {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  color: var(--rz-base-600);
+  font-size: 0.95rem;
+}
+
 .d4-event-card {
   width: 340px;
   min-width: 340px;

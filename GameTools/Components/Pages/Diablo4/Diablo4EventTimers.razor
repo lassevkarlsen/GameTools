@@ -22,6 +22,8 @@
         <RadzenCheckBox Name="chkShowWorldBosses" @bind-Value="@_showWorldBosses" Change="(bool b) => OnShowWorldBossesChanged(b)"/>
         <RadzenLabel Text="Show world bosses" Component="chkShowWorldBosses"/>
     </div>
+
+    <div class="d4-live-clock" aria-live="polite">@_currentLocalTime.ToString("T")</div>
 </RadzenStack>
 
 @if (_events.Count > 0)
