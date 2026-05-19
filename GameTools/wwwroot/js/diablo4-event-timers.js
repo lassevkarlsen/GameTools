@@ -9,6 +9,10 @@ window.gameTools.diablo4EventTimers = (function() {
         hour: "2-digit",
         minute: "2-digit"
     });
+    const eventTimeFormatter = new Intl.DateTimeFormat(navigator.languages, {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
     const localTimeFormatter = new Intl.DateTimeFormat(navigator.languages, {
         hour: "2-digit",
         minute: "2-digit",
@@ -148,9 +152,9 @@ window.gameTools.diablo4EventTimers = (function() {
                             ? `~${formattedRemaining}`
                             : formattedRemaining;
 
-                        timerElement.textContent = `Started ${localTimeFormatter.format(startTime)}, ends in ${remainingWithApproximation}${dots}`;
+                        timerElement.textContent = `Started ${eventTimeFormatter.format(startTime)}, ends in ${remainingWithApproximation}${dots}`;
                     } else {
-                        timerElement.textContent = `Started ${localTimeFormatter.format(startTime)}, running for ${formatRemaining(elapsedMilliseconds)}${dots}`;
+                        timerElement.textContent = `Started ${eventTimeFormatter.format(startTime)}, running for ${formatRemaining(elapsedMilliseconds)}${dots}`;
                     }
                 } else {
                     const formattedRemaining = formatRemaining(millisecondsRemaining);
@@ -161,7 +165,7 @@ window.gameTools.diablo4EventTimers = (function() {
                         ? `~${normalizedRemaining}`
                         : normalizedRemaining;
 
-                    timerElement.textContent = `Starts ${localTimeFormatter.format(startTime)}, in ${remainingWithApproximation}`;
+                    timerElement.textContent = `Starts ${eventTimeFormatter.format(startTime)}, in ${remainingWithApproximation}`;
                 }
                 timerElement.title = localDateTimeFormatter.format(new Date(startTimeMilliseconds));
 
