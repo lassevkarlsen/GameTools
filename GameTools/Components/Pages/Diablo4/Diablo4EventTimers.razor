@@ -23,7 +23,9 @@
         <RadzenLabel Text="Show world bosses" Component="chkShowWorldBosses"/>
     </div>
 
-    <div class="d4-live-clock" aria-live="polite">@_currentLocalTime.ToString("T")</div>
+    <div id="d4-event-timers-header">
+        <div class="d4-live-clock" aria-live="polite"></div>
+    </div>
 </RadzenStack>
 
 @if (_events.Count > 0)

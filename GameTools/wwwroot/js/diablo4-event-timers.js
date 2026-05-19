@@ -93,60 +93,85 @@ window.gameTools.diablo4EventTimers = (function() {
         progressFillElement.style.width = `${progress.toFixed(2)}%`;
     }
 
-    function updateTimerText(container) {
-        const now = Date.now();
-        const timerElements = container.querySelectorAll("[data-d4-start-time]");
-
-        for (const timerElement of timerElements) {
-            const startTimeMilliseconds = Number(timerElement.getAttribute("data-d4-start-time"));
-            if (Number.isNaN(startTimeMilliseconds)) {
-                continue;
-            }
-
-            const millisecondsRemaining = startTimeMilliseconds - now;
-            const startTime = new Date(startTimeMilliseconds);
-            const isRunning = millisecondsRemaining <= 0;
-            const elapsedMilliseconds = now - startTimeMilliseconds;
-            const eventCardElement = timerElement.closest(".d4-event-card");
-            const endTimeMilliseconds = eventCardElement
-                ? Number(eventCardElement.getAttribute("data-d4-progress-end"))
-                : Number.NaN;
-            const hasValidEndTime = !Number.isNaN(endTimeMilliseconds) && endTimeMilliseconds > startTimeMilliseconds;
-
-            if (isRunning) {
-                const dots = getRunningDots(now);
-                if (hasValidEndTime) {
-                    const millisecondsUntilEnd = Math.max(0, endTimeMilliseconds - now);
-                    const formattedRemaining = formatRemaining(millisecondsUntilEnd);
-                    const shouldUseApproximateMinutes = millisecondsUntilEnd >= 600000 && millisecondsUntilEnd < 3600000;
-                    const remainingWithApproximation = shouldUseApproximateMinutes
-                        ? `~${formattedRemaining}`
-                        : formattedRemaining;
-
-                    timerElement.textContent = `Started ${localTimeFormatter.format(startTime)}, ends in ${remainingWithApproximation}${dots}`;
-                } else {
-                    timerElement.textContent = `Started ${localTimeFormatter.format(startTime)}, running for ${formatRemaining(elapsedMilliseconds)}${dots}`;
-                }
+    const containers = new Set();
+    function formatClock(date) {
+        const parts = localTimeFormatter.formatToParts(date);
+        const showColon = date.getSeconds() % 2 === 0;
+        let html = "";
+        for (const part of parts) {
+            if (part.type === "literal" && part.value.includes(":")) {
+                html += `<span style="visibility: ${showColon ? "visible" : "hidden"}">${part.value}</span>`;
             } else {
-                const formattedRemaining = formatRemaining(millisecondsRemaining);
-                const normalizedRemaining = formattedRemaining.startsWith("~")
-                    ? formattedRemaining.substring(1)
-                    : formattedRemaining;
-                const remainingWithApproximation = millisecondsRemaining >= 600000
-                    ? `~${normalizedRemaining}`
-                    : normalizedRemaining;
-
-                timerElement.textContent = `Starts ${localTimeFormatter.format(startTime)}, in ${remainingWithApproximation}`;
+                html += part.value;
             }
-            timerElement.title = localDateTimeFormatter.format(new Date(startTimeMilliseconds));
+        }
+        return html;
+    }
 
-            if (eventCardElement) {
-                eventCardElement.classList.toggle("d4-event-card-soon", millisecondsRemaining <= 600000);
-                updateProgressBar(eventCardElement, now, startTimeMilliseconds);
+    function updateTimerText() {
+        const nowMilliseconds = Date.now();
+        const now = new Date(nowMilliseconds);
 
-                const notificationButtonElement = eventCardElement.querySelector(".d4-notification-button");
-                if (notificationButtonElement) {
-                    notificationButtonElement.classList.toggle("d4-notification-button-hidden", millisecondsRemaining <= 300000);
+        const clockElements = document.querySelectorAll(".d4-live-clock");
+        const clockHtml = formatClock(now);
+        for (const clockElement of clockElements) {
+            clockElement.innerHTML = clockHtml;
+        }
+
+        for (const container of containers) {
+            const timerElements = container.querySelectorAll("[data-d4-start-time]");
+
+            for (const timerElement of timerElements) {
+                const startTimeMilliseconds = Number(timerElement.getAttribute("data-d4-start-time"));
+                if (Number.isNaN(startTimeMilliseconds)) {
+                    continue;
+                }
+
+                const millisecondsRemaining = startTimeMilliseconds - nowMilliseconds;
+                const startTime = new Date(startTimeMilliseconds);
+                const isRunning = millisecondsRemaining <= 0;
+                const elapsedMilliseconds = nowMilliseconds - startTimeMilliseconds;
+                const eventCardElement = timerElement.closest(".d4-event-card");
+                const endTimeMilliseconds = eventCardElement
+                    ? Number(eventCardElement.getAttribute("data-d4-progress-end"))
+                    : Number.NaN;
+                const hasValidEndTime = !Number.isNaN(endTimeMilliseconds) && endTimeMilliseconds > startTimeMilliseconds;
+
+                if (isRunning) {
+                    const dots = getRunningDots(nowMilliseconds);
+                    if (hasValidEndTime) {
+                        const millisecondsUntilEnd = Math.max(0, endTimeMilliseconds - nowMilliseconds);
+                        const formattedRemaining = formatRemaining(millisecondsUntilEnd);
+                        const shouldUseApproximateMinutes = millisecondsUntilEnd >= 600000 && millisecondsUntilEnd < 3600000;
+                        const remainingWithApproximation = shouldUseApproximateMinutes
+                            ? `~${formattedRemaining}`
+                            : formattedRemaining;
+
+                        timerElement.textContent = `Started ${localTimeFormatter.format(startTime)}, ends in ${remainingWithApproximation}${dots}`;
+                    } else {
+                        timerElement.textContent = `Started ${localTimeFormatter.format(startTime)}, running for ${formatRemaining(elapsedMilliseconds)}${dots}`;
+                    }
+                } else {
+                    const formattedRemaining = formatRemaining(millisecondsRemaining);
+                    const normalizedRemaining = formattedRemaining.startsWith("~")
+                        ? formattedRemaining.substring(1)
+                        : formattedRemaining;
+                    const remainingWithApproximation = millisecondsRemaining >= 600000
+                        ? `~${normalizedRemaining}`
+                        : normalizedRemaining;
+
+                    timerElement.textContent = `Starts ${localTimeFormatter.format(startTime)}, in ${remainingWithApproximation}`;
+                }
+                timerElement.title = localDateTimeFormatter.format(new Date(startTimeMilliseconds));
+
+                if (eventCardElement) {
+                    eventCardElement.classList.toggle("d4-event-card-soon", millisecondsRemaining <= 600000);
+                    updateProgressBar(eventCardElement, nowMilliseconds, startTimeMilliseconds);
+
+                    const notificationButtonElement = eventCardElement.querySelector(".d4-notification-button");
+                    if (notificationButtonElement) {
+                        notificationButtonElement.classList.toggle("d4-notification-button-hidden", millisecondsRemaining <= 300000);
+                    }
                 }
             }
         }
@@ -157,18 +182,21 @@ window.gameTools.diablo4EventTimers = (function() {
             clearInterval(intervalId);
             intervalId = null;
         }
+        containers.clear();
     }
 
     function start(containerSelector) {
-        stop();
-
         const container = document.querySelector(containerSelector);
         if (!container) {
             return;
         }
 
-        updateTimerText(container);
-        intervalId = window.setInterval(() => updateTimerText(container), 1000);
+        containers.add(container);
+
+        if (intervalId === null) {
+            updateTimerText();
+            intervalId = window.setInterval(updateTimerText, 1000);
+        }
     }
 
     return {
