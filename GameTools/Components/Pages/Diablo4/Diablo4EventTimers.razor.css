@@ -115,6 +115,7 @@
 
 .d4-event-time {
   font-variant-numeric: tabular-nums;
+  font-size: 1rem;
 }
 
 .d4-event-zone {
