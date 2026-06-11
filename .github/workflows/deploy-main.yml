@@ -36,9 +36,9 @@ jobs:
       - name: Publish
         run: dotnet publish GameTools/GameTools.csproj --configuration Release --output ./publish --no-build
 
-      #- name: Stop Docker Compose services
-      #  working-directory: /home/lassevk/.apps/GameTools
-      #  run: docker compose down
+      - name: Stop Docker Compose services
+        working-directory: /home/lassevk/.apps/GameTools
+        run: docker compose down
 
       - name: Deploy application
         run: |
